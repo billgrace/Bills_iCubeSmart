@@ -3,8 +3,17 @@
 #define LEDMovingAxes_h
 #include <Arduino.h>
 
+/*
+Mode 0: Moving axes
+Mode 1: Moving planes
+In mode 1 the X axis becomes an XY plane,
+  the Y axis becomes a YZ plane and
+  the Z axis becomes a ZX plane.
+*/
+
 class LEDMovingAxes {
 private:
+	int Mode[3];
 	int AxisColorChangeInterval;
 	int StepCount;
 	int MaxStepCount;

@@ -1,4 +1,4 @@
-//// Bill_s_iCubeSmart
+// Bill_s_iCubeSmart
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -29,6 +29,7 @@
 #include "LEDPool.h"            // Animation 22
 #include "LEDRotor.h"           // Animation 23
 #include "LEDBinary.h"          // Animation 24
+// #include "LEDShape.h"           // Animation 25
 
 
 // Onboard LEDs:
