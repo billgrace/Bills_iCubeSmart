@@ -29,6 +29,7 @@
 #include "LEDPool.h"
 #include "LEDRotor.h"
 #include "LEDBinary.h"
+#include "LEDSHape.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -57,6 +58,7 @@ extern LEDSlosh Slosh;
 extern LEDPool Pool;
 extern LEDRotor Rotor;
 extern LEDBinary Binary;
+extern LEDShape Shape;
 
 LEDCube::LEDCube() {
   TestMode = false;
@@ -217,10 +219,13 @@ void LEDCube::AnimationStepThrottle() {
       case 23:
         Rotor.StepRotor();
         break;
-      default:
       case 24:
         Binary.StepBinary();
         break;
+      case 25:
+        Binary.StepShape();
+        break;
+      default:
         Serial1.println("Default case in AnimationStepThrottle()");
         break;
       }
@@ -392,6 +397,11 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Binary.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Binary.StartBinary();
+    break;
+  case 25:
+    SuggestedAnimationDuration = Shape.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Binary.StartShape();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

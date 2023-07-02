@@ -29,7 +29,7 @@
 #include "LEDPool.h"            // Animation 22
 #include "LEDRotor.h"           // Animation 23
 #include "LEDBinary.h"          // Animation 24
-// #include "LEDShape.h"           // Animation 25
+#include "LEDShape.h"           // Animation 25
 
 
 // Onboard LEDs:
@@ -84,6 +84,7 @@ LEDSlosh Slosh;
 LEDPool Pool;
 LEDRotor Rotor;
 LEDBinary Binary;
+LEDShape Shape;
 
 // Serial input (development diagnostic) protocol:
 // Each serial packet starts with 'S' and ends with '\n'.

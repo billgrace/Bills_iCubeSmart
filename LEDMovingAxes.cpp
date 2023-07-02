@@ -17,12 +17,10 @@ int LEDMovingAxes::SuggestedNumberOfAnimationCycles() {
 }
 
 void LEDMovingAxes::StartMovingAxes() {
-	Mode[0] = 1;
-	NumberOfAxisSets = 1;
-	// Mode[0] = random(0, 2);
-	// Mode[1] = random(0, 2);
-	// Mode[2] = random(0, 2);
-	// NumberOfAxisSets = random(1, 4);
+	Mode[0] = random(0, 2);
+	Mode[1] = random(0, 2);
+	Mode[2] = random(0, 2);
+	NumberOfAxisSets = random(1, 4);
 	AxisColorChangeInterval = random(2, 5);
 	StepCount = 0;
 	MaxStepCount = random(100, 250);
@@ -425,61 +423,133 @@ void LEDMovingAxes::DrawAxes(bool Erase) {
 		break;
 	}
 	if (NumberOfAxisSets < 2) return;
-	// Draw the X2 axis
-	for (int X = 0; X < 8; X++) {
-		if (Erase) {
-			Cube.SetLEDColor(X, Y2AxisPosition, Z2AxisPosition, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X, Y2AxisPosition, Z2AxisPosition, X2AxisRed, X2AxisGreen, X2AxisBlue);
+	switch (Mode[1]) {
+	case 0:
+		// Draw the X2 axis
+		for (int X = 0; X < 8; X++) {
+			if (Erase) {
+				Cube.SetLEDColor(X, Y2AxisPosition, Z2AxisPosition, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X, Y2AxisPosition, Z2AxisPosition, X2AxisRed, X2AxisGreen, X2AxisBlue);
+			}
 		}
-	}
-	// Draw the Y2 axis
-	for (int Y = 0; Y < 8; Y++) {
-		if (Erase) {
-			Cube.SetLEDColor(X2AxisPosition, Y, Z2AxisPosition, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X2AxisPosition, Y, Z2AxisPosition, Y2AxisRed, Y2AxisGreen, Y2AxisBlue);
+		// Draw the Y2 axis
+		for (int Y = 0; Y < 8; Y++) {
+			if (Erase) {
+				Cube.SetLEDColor(X2AxisPosition, Y, Z2AxisPosition, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X2AxisPosition, Y, Z2AxisPosition, Y2AxisRed, Y2AxisGreen, Y2AxisBlue);
+			}
 		}
-	}
-	// Draw the Z2 axis
-	for (int Z = 0; Z < 8; Z++) {
-		if (Erase) {
-			Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z, Z2AxisRed, Z2AxisGreen, Z2AxisBlue);
+		// Draw the Z2 axis
+		for (int Z = 0; Z < 8; Z++) {
+			if (Erase) {
+				Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z, Z2AxisRed, Z2AxisGreen, Z2AxisBlue);
+			}
 		}
-	}
-	// Draw the 2origin
-	if (!Erase) {
-		Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z2AxisPosition, Origin2Red, Origin2Green, Origin2Blue);
+		// Draw the 2origin
+		if (!Erase) {
+			Cube.SetLEDColor(X2AxisPosition, Y2AxisPosition, Z2AxisPosition, Origin2Red, Origin2Green, Origin2Blue);
+		}
+		break;
+	case 1:
+		// Draw the X2 plane
+		for (int X = 0; X < 8; X++) {
+			for (int Y = 0; Y < 8; Y++) {
+				if (Erase) {
+					Cube.SetLEDColor(X, Y, Z2AxisPosition, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X, Y, Z2AxisPosition, X2AxisRed, X2AxisGreen, X2AxisBlue);
+				}
+			}
+		}
+		// Draw the Y2 plane
+		for (int Y = 0; Y < 8; Y++) {
+			for (int Z = 0; Z < 8; Z++) {
+				if (Erase) {
+					Cube.SetLEDColor(X2AxisPosition, Y, Z, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X2AxisPosition, Y, Z, X2AxisRed, X2AxisGreen, X2AxisBlue);
+				}
+			}
+		}
+		// Draw the Z2 plane
+		for (int Z = 0; Z < 8; Z++) {
+			for (int X = 0; X < 8; X++) {
+				if (Erase) {
+					Cube.SetLEDColor(X, Y2AxisPosition, Z, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X, Y2AxisPosition, Z, Z2AxisRed, Z2AxisGreen, Z2AxisBlue);
+				}
+			}
+		}
+		break;
 	}
 	if (NumberOfAxisSets < 3) return;
-	// Draw the X3 axis
-	for (int X = 0; X < 8; X++) {
-		if (Erase) {
-			Cube.SetLEDColor(X, Y3AxisPosition, Z3AxisPosition, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X, Y3AxisPosition, Z3AxisPosition, X3AxisRed, X3AxisGreen, X3AxisBlue);
+	switch (Mode[2]) {
+	case 0:
+		// Draw the X3 axis
+		for (int X = 0; X < 8; X++) {
+			if (Erase) {
+				Cube.SetLEDColor(X, Y3AxisPosition, Z3AxisPosition, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X, Y3AxisPosition, Z3AxisPosition, X3AxisRed, X3AxisGreen, X3AxisBlue);
+			}
 		}
-	}
-	// Draw the Y3 axis
-	for (int Y = 0; Y < 8; Y++) {
-		if (Erase) {
-			Cube.SetLEDColor(X3AxisPosition, Y, Z3AxisPosition, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X3AxisPosition, Y, Z3AxisPosition, Y3AxisRed, Y3AxisGreen, Y3AxisBlue);
+		// Draw the Y3 axis
+		for (int Y = 0; Y < 8; Y++) {
+			if (Erase) {
+				Cube.SetLEDColor(X3AxisPosition, Y, Z3AxisPosition, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X3AxisPosition, Y, Z3AxisPosition, Y3AxisRed, Y3AxisGreen, Y3AxisBlue);
+			}
 		}
-	}
-	// Draw the Z3 axis
-	for (int Z = 0; Z < 8; Z++) {
-		if (Erase) {
-			Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z, 0, 0, 0);
-		} else {
-			Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z, Z3AxisRed, Z3AxisGreen, Z3AxisBlue);
+		// Draw the Z3 axis
+		for (int Z = 0; Z < 8; Z++) {
+			if (Erase) {
+				Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z, 0, 0, 0);
+			} else {
+				Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z, Z3AxisRed, Z3AxisGreen, Z3AxisBlue);
+			}
 		}
-	}
-	// Draw the 3origin
-	if (!Erase) {
-		Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z3AxisPosition, Origin3Red, Origin3Green, Origin3Blue);
+		// Draw the 3origin
+		if (!Erase) {
+			Cube.SetLEDColor(X3AxisPosition, Y3AxisPosition, Z3AxisPosition, Origin3Red, Origin3Green, Origin3Blue);
+		}
+		break;
+	case 1:
+		// Draw the X3 plane
+		for (int X = 0; X < 8; X++) {
+			for (int Y = 0; Y < 8; Y++) {
+				if (Erase) {
+					Cube.SetLEDColor(X, Y, Z3AxisPosition, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X, Y, Z3AxisPosition, X3AxisRed, X3AxisGreen, X3AxisBlue);
+				}
+			}
+		}
+		// Draw the Y3 plane
+		for (int Y = 0; Y < 8; Y++) {
+			for (int Z = 0; Z < 8; Z++) {
+				if (Erase) {
+					Cube.SetLEDColor(X3AxisPosition, Y, Z, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X3AxisPosition, Y, Z, X3AxisRed, X3AxisGreen, X3AxisBlue);
+				}
+			}
+		}
+		// Draw the Z3 plane
+		for (int Z = 0; Z < 8; Z++) {
+			for (int X = 0; X < 8; X++) {
+				if (Erase) {
+					Cube.SetLEDColor(X, Y3AxisPosition, Z, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X, Y3AxisPosition, Z, Z3AxisRed, Z3AxisGreen, Z3AxisBlue);
+				}
+			}
+		}
+		break;
 	}
 }
