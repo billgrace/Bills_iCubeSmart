@@ -22,7 +22,7 @@ void LEDBinary::StartBinary() {
 	Cube.IncrementAnimationDurationCycleCount();
 	Cube.SetAnimationStepSpeedPeriodTo(random(60, 100));
 	StepCounter = 0;
-	StepTarget = random(1000, 1500);
+	StepTarget = random(200, 500);
 	AngleStepCounter = 0;
 	AngleStepsPerCenterMove = random(5, 25);
 	NumberOfCenters = 1;

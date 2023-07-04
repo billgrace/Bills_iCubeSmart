@@ -30,6 +30,8 @@
 #include "LEDRotor.h"           // Animation 23
 #include "LEDBinary.h"          // Animation 24
 #include "LEDShape.h"           // Animation 25
+#include "LEDCombo1.h"          // Animation 26
+#include "LEDCombo2.h"          // Animation 27
 
 
 // Onboard LEDs:
@@ -85,6 +87,8 @@ LEDPool Pool;
 LEDRotor Rotor;
 LEDBinary Binary;
 LEDShape Shape;
+LEDCombo1 Combo1;
+LEDCombo2 Combo2;
 
 // Serial input (development diagnostic) protocol:
 // Each serial packet starts with 'S' and ends with '\n'.
@@ -279,8 +283,10 @@ Other valid 2nd characters:
 'B' => (early diagnostic) draw a ball
 'C' => clear the entire cube
 'D' => display global values
+'E' => stop animation and display a rainbow cube
 'G' => set global: 'GBT'/'GBF' = global boolean true/false, 'GI##' = global integer value
 'P' => pause the animation
+'R' => fill an X-parallel row
 'S' => set the test mode animation number
 'T' => toggle test mode on/off
 'V' => set the animation step period
@@ -310,6 +316,9 @@ void loop() {
       Serial1.print(Cube.GetGlobalBoolean());
       Serial1.print(", integer: ");
       Serial1.println(Cube.GetGlobalInteger());
+    } else if ((SerialReceivePacket[1] == 'E') || (SerialReceivePacket[1] == 'e')) {
+      Cube.ToggleAnimationPaused();
+      Cube.PaintRainbow();
     } else if ((SerialReceivePacket[1] == 'G') || (SerialReceivePacket[1] == 'g')) {
       switch (SerialReceivePacket[2]) {
       case 'B':
@@ -340,6 +349,16 @@ void loop() {
       }
     } else if ((SerialReceivePacket[1] == 'P') || (SerialReceivePacket[1] == 'p')) {
       Cube.ToggleAnimationPaused();
+    } else if ((SerialReceivePacket[1] == 'R') || (SerialReceivePacket[1] == 'r')) {
+      // Fill all X positions 
+      byte Y = HexCharToByte(SerialReceivePacket[2]);
+      byte Z = HexCharToByte(SerialReceivePacket[3]);
+      byte R = HexCharToByte(SerialReceivePacket[4]);
+      byte G = HexCharToByte(SerialReceivePacket[5]);
+      byte B = HexCharToByte(SerialReceivePacket[6]);
+      for (int X = 0; X < 8; X++) {
+        Cube.SetLEDColor(X, Y, Z, R, G, B);
+      }
     // } else if ((SerialReceivePacket[1] == 'S') || (SerialReceivePacket[1] == 's')) {
     //   // Return an analog read
     //   int AnalogInput = analogRead(PA0);

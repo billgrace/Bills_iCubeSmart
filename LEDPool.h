@@ -26,6 +26,9 @@ private:
 	int StepCounter;
 	int StepTarget;
 	int DrippingCorner;
+	int PoolHeight;
+	int PoolHeightCounter;
+	int PoolHeightTarget;
 	int ArcLength;
 	int ArcPoints[14][3] = {
 		{0, 0, 1}, {0, 0, 2}, {0, 0, 3}, {0, 0, 4}, {0, 0, 5}, {0, 0, 6}, {1, 1, 7}, 

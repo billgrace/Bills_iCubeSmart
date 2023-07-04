@@ -9,6 +9,8 @@ extern LEDCube Cube;
 extern LEDMove Move;
 extern LEDPool Pool;
 
+#define MaxPoolHeight 5
+
 LEDPool::LEDPool() {
 
 }
@@ -21,22 +23,6 @@ void LEDPool::StartPool() {
 	Cube.SetAnimationStepSpeedPeriodTo(random(150, 200));
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
-	// CompositeColor = Cube.RandomSolidColor();
-	// Colors[0][0] = Cube.RedPartOf(CompositeColor);
-	// Colors[0][1] = Cube.GreenPartOf(CompositeColor);
-	// Colors[0][2] = Cube.BluePartOf(CompositeColor);
-	// CompositeColor = Cube.RandomSolidColor();
-	// Colors[1][0] = Cube.RedPartOf(CompositeColor);
-	// Colors[1][1] = Cube.GreenPartOf(CompositeColor);
-	// Colors[1][2] = Cube.BluePartOf(CompositeColor);
-	// CompositeColor = Cube.RandomSolidColor();
-	// Colors[2][0] = Cube.RedPartOf(CompositeColor);
-	// Colors[2][1] = Cube.GreenPartOf(CompositeColor);
-	// Colors[2][2] = Cube.BluePartOf(CompositeColor);
-	// CompositeColor = Cube.RandomSolidColor();
-	// Colors[3][0] = Cube.RedPartOf(CompositeColor);
-	// Colors[3][1] = Cube.GreenPartOf(CompositeColor);
-	// Colors[3][2] = Cube.BluePartOf(CompositeColor);
 	Colors[0][0] = Cube.RandomColor();
 	Colors[0][1] = Cube.RandomColor();
 	Colors[0][2] = Cube.RandomColor();
@@ -51,6 +37,9 @@ void LEDPool::StartPool() {
 	Colors[3][2] = Cube.RandomColor();
 	StepCounter = 0;
 	StepTarget = random(100, 200);
+	PoolHeight = random(3, MaxPoolHeight + 1);
+	PoolHeightCounter = 0;
+	PoolHeightTarget = StepTarget / PoolHeight;
 	DrawCornerPool(0);
 	DrawCornerPool(1);
 	DrawCornerPool(2);
@@ -65,6 +54,15 @@ void LEDPool::StepPool() {
 		StartPool();
 	}
 	DrawArcs(false);
+	PoolHeightCounter++;
+	if ((PoolHeightCounter >= PoolHeightTarget) && (PoolHeight > 1)) {
+		PoolHeightCounter = 0;
+		PoolHeight--;
+		DrawCornerPool(0);
+		DrawCornerPool(1);
+		DrawCornerPool(2);
+		DrawCornerPool(3);
+	}
 	DrippingCorner = Cube.NextIndex(DrippingCorner, 4);
 	if (ArcLength < 14) ArcLength++;
 	DrawArcs(true);
@@ -111,12 +109,18 @@ void LEDPool::DrawCornerPool(int Corner) {
 		BlankY = 5;
 		break;
 	}
-	for (int X = MinX; X <= MaxX; X++) {
-		for (int Y = MinY; Y <= MaxY; Y++) {
-			Cube.SetLEDColor(X, Y, 0, Colors[Corner][0], Colors[Corner][1], Colors[Corner][2]);
+	for (int Z = 0; Z < MaxPoolHeight; Z++) {
+		for (int X = MinX; X <= MaxX; X++) {
+			for (int Y = MinY; Y <= MaxY; Y++) {
+				if (Z >= PoolHeight) {
+					Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+				} else {
+					Cube.SetLEDColor(X, Y, Z, Colors[Corner][0], Colors[Corner][1], Colors[Corner][2]);
+				}
+			}
 		}
+		Cube.SetLEDColor(BlankX, BlankY, Z, 0, 0, 0);
 	}
-	Cube.SetLEDColor(BlankX, BlankY, 0, 0, 0, 0);
 }
 
 void LEDPool::DrawArcs(bool OffOn) {

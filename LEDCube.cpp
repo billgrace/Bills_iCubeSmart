@@ -30,6 +30,8 @@
 #include "LEDRotor.h"
 #include "LEDBinary.h"
 #include "LEDSHape.h"
+#include "LEDCombo1.h"
+#include "LEDCombo2.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -59,6 +61,8 @@ extern LEDPool Pool;
 extern LEDRotor Rotor;
 extern LEDBinary Binary;
 extern LEDShape Shape;
+extern LEDCombo1 Combo1;
+extern LEDCombo2 Combo2;
 
 LEDCube::LEDCube() {
   TestMode = false;
@@ -223,7 +227,13 @@ void LEDCube::AnimationStepThrottle() {
         Binary.StepBinary();
         break;
       case 25:
-        Binary.StepShape();
+        Shape.StepShape();
+        break;
+      case 26:
+        Combo1.StepCombo1();
+        break;
+      case 27:
+        Combo2.StepCombo2();
         break;
       default:
         Serial1.println("Default case in AnimationStepThrottle()");
@@ -401,7 +411,17 @@ int CandidateAnimationIndex;
   case 25:
     SuggestedAnimationDuration = Shape.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
-    Binary.StartShape();
+    Shape.StartShape();
+    break;
+  case 26:
+    SuggestedAnimationDuration = Combo1.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo1.StartCombo1();
+    break;
+  case 27:
+    SuggestedAnimationDuration = Combo1.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo2.StartCombo2();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");
@@ -1032,6 +1052,17 @@ void LEDCube::ClearCurrentLayer() {
   for (int i = 0; i < ShiftRegisterBytes; i++)
     SPI.transfer(0);
   digitalWrite(LE, HIGH);
+}
+
+// Paint a rainbow into the cube
+void LEDCube::PaintRainbow() {
+  for (int C = 0; C < ColorDepth; C++) {
+    for (int H = 0; H < 8; H++) {
+      for (int S = 0; S < 24; S++) {
+        Image[C][H][S] = RainbowImage[C][H][S];
+      }
+    }
+  }
 }
 
 // Convert X coordinate to RED segment's shift register byte index
