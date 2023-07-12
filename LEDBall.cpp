@@ -51,7 +51,7 @@ void LEDBall::StartBall() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
 	CurrentSegmentCount = 0;
-	Move.InitializeCubeMove(2);
+	Move.InitializeCubeMove(2, 0, 10);
 }
 
 void LEDBall::StepBall() {

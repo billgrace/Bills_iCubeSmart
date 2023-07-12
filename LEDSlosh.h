@@ -5,6 +5,7 @@
 
 class LEDSlosh {
 private:
+	int Mode;
 	int LeadRed;
 	int LeadGreen;
 	int LeadBlue;

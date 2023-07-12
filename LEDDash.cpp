@@ -20,10 +20,6 @@ int LEDDash::SuggestedNumberOfAnimationCycles() {
 void LEDDash::StartDash() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
-	NumberOfStepsToPerform = random(100, 500);
-	// Cube.SetAnimationStepSpeedPeriodTo(100);
-	Cube.SetAnimationStepSpeedPeriodTo(random(30, 100));
-	// Cube.SetAnimationStepSpeedPeriodTo(5000 / NumberOfStepsToPerform);
 	StepCounter = 0;
 	// Initialize elements to "off"
 	for (int i = 0; i < TrailLength; i++) {
@@ -35,8 +31,18 @@ void LEDDash::StartDash() {
 	LeadRed = 7;
 	LeadGreen = 7;
 	LeadBlue = 7;
+	// Pick a move mode
+	int MoveMode = random(0, 4);
 	// Tell Move our object size has a radius of 1
-	Move.InitializeCubeMove(1);
+	Move.InitializeCubeMove(1, MoveMode, random(15, 50));
+	// Pick a speed that's slower for mode 0 and faster for the others
+	if (MoveMode == 0) {
+		Cube.SetAnimationStepSpeedPeriodTo(random(30, 100));
+		NumberOfStepsToPerform = random(100, 500);
+	} else {
+		Cube.SetAnimationStepSpeedPeriodTo(random(10, 30));
+		NumberOfStepsToPerform = random(300, 2500);
+	}
 }
 
 void LEDDash::StepDash() {

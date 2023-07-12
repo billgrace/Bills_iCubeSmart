@@ -3,13 +3,15 @@
 #define LEDPlaneToCube_h
 #include <Arduino.h>
 
-// CurrentNormalAxis:
-//   0 => +X
-//   1 => -X
-//   2 => +Y
-//   3 => -Y
-//   4 => +Z
-//   5 => -Z
+/*
+CurrentNormalAxis:
+  0 => +X
+  1 => -X
+  2 => +Y
+  3 => -Y
+  4 => +Z
+  5 => -Z
+*/
 
 class LEDPlaneToCube {
 	public:

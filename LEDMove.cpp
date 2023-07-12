@@ -11,7 +11,10 @@ LEDMove::LEDMove() {
 
 }
 
-void LEDMove::InitializeCubeMove(int Radius) {
+void LEDMove::InitializeCubeMove(int Radius, int Mode, int SegmentCountTarget) {
+	CubeMoveSegmentCounter = 0;
+	CubeMoveSegmentTarget = SegmentCountTarget;
+	CubeMoveMode = Mode;
 	ObjectRadius = Radius;
 	switch(Radius) {
 	case 1:
@@ -31,7 +34,24 @@ void LEDMove::InitializeCubeMove(int Radius) {
 		MaxPosition = 4;
 		break;
 	}
-	CurrentCubeSegmentNumber = random(0, 24);
+	switch (CubeMoveMode) {
+	case 0:
+		// traverse all edges of the cube
+		CurrentCubeSegmentNumber = random(0, 24);
+		break;
+	case 1:
+		// rotate around the edges of an outer X plane
+		CurrentCubeSegmentNumber = Cube.RandomPickOfSixteen(1, 2, 4, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 19, 21, 22);
+		break;
+	case 2:
+		// rotate around the edges of an outer Y plane
+		CurrentCubeSegmentNumber = Cube.RandomPickOfSixteen(0, 2, 3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 20, 21, 23);
+		break;
+	case 3:
+		// rotate around the edges of an outer Z plane
+		CurrentCubeSegmentNumber = Cube.RandomPickOfSixteen(0, 1, 3, 4, 6, 7, 9, 10, 13, 14, 16, 17, 19, 20, 22, 23);
+		break;
+	}
 	StartCubeMoveSegment();
 }
 
@@ -145,78 +165,278 @@ int LEDMove::GetCubeMoveDeltaZ() {
 
 void LEDMove::SetupNextCubeMoveSegment() {
 	int NewSegmentNumber;
-	switch(CurrentCubeSegmentNumber) {
+	switch(CubeMoveMode) {
 	case 0:
-		NewSegmentNumber = Cube.RandomPickOfTwo(4, 5);
+		// traverse all edges of the cube
+		switch(CurrentCubeSegmentNumber) {
+		case 0:
+			NewSegmentNumber = Cube.RandomPickOfTwo(4, 5);
+			break;
+		case 1:
+			NewSegmentNumber = Cube.RandomPickOfTwo(7, 8);
+			break;
+		case 2:
+			NewSegmentNumber = Cube.RandomPickOfTwo(13, 14);
+			break;
+		case 3:
+			NewSegmentNumber = Cube.RandomPickOfTwo(1, 2);
+			break;
+		case 4:
+			NewSegmentNumber = Cube.RandomPickOfTwo(10, 11);
+			break;
+		case 5:
+			NewSegmentNumber = Cube.RandomPickOfTwo(16, 17);
+			break;
+		case 6:
+			NewSegmentNumber = Cube.RandomPickOfTwo(0, 2);
+			break;
+		case 7:
+			NewSegmentNumber = Cube.RandomPickOfTwo(9, 11);
+			break;
+		case 8:
+			NewSegmentNumber = Cube.RandomPickOfTwo(19, 20);
+			break;
+		case 9:
+			NewSegmentNumber = Cube.RandomPickOfTwo(3, 5);
+			break;
+		case 10:
+			NewSegmentNumber = Cube.RandomPickOfTwo(6, 8);
+			break;
+		case 11:
+			NewSegmentNumber = Cube.RandomPickOfTwo(22, 23);
+			break;
+		case 12:
+			NewSegmentNumber = Cube.RandomPickOfTwo(0, 1);
+			break;
+		case 13:
+			NewSegmentNumber = Cube.RandomPickOfTwo(15, 17);
+			break;
+		case 14:
+			NewSegmentNumber = Cube.RandomPickOfTwo(18, 20);
+			break;
+		case 15:
+			NewSegmentNumber = Cube.RandomPickOfTwo(3, 4);
+			break;
+		case 16:
+			NewSegmentNumber = Cube.RandomPickOfTwo(12, 14);
+			break;
+		case 17:
+			NewSegmentNumber = Cube.RandomPickOfTwo(21, 23);
+			break;
+		case 18:
+			NewSegmentNumber = Cube.RandomPickOfTwo(6, 7);
+			break;
+		case 19:
+			NewSegmentNumber = Cube.RandomPickOfTwo(12, 13);
+			break;
+		case 20:
+			NewSegmentNumber = Cube.RandomPickOfTwo(21, 22);
+			break;
+		case 21:
+			NewSegmentNumber = Cube.RandomPickOfTwo(9, 10);
+			break;
+		case 22:
+			NewSegmentNumber = Cube.RandomPickOfTwo(15, 16);
+			break;
+		case 23:
+			NewSegmentNumber = Cube.RandomPickOfTwo(18, 19);
+			break;
+		}
 		break;
 	case 1:
-		NewSegmentNumber = Cube.RandomPickOfTwo(7, 8);
+		// rotate around the edges of an outer X plane
+		CubeMoveSegmentCounter++;
+		if (CubeMoveSegmentCounter >= CubeMoveSegmentTarget) {
+			CubeMoveSegmentCounter = 0;
+			CubeMoveMode = 2;
+			NewSegmentNumber = Cube.RandomPickOfSixteen(0, 2, 3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 20, 21, 23);
+		} else {
+			switch (CurrentCubeSegmentNumber) {
+			case 1:
+				NewSegmentNumber = 8;
+				break;
+			case 2:
+				NewSegmentNumber = 14;
+				break;
+			case 4:
+				NewSegmentNumber = 11;
+				break;
+			case 5:
+				NewSegmentNumber = 17;
+				break;
+			case 6:
+				NewSegmentNumber = 2;
+				break;
+			case 8:
+				NewSegmentNumber = 19;
+				break;
+			case 9:
+				NewSegmentNumber = 5;
+				break;
+			case 11:
+				NewSegmentNumber = 22;
+				break;
+			case 12:
+				NewSegmentNumber = 1;
+				break;
+			case 14:
+				NewSegmentNumber = 18;
+				break;
+			case 15:
+				NewSegmentNumber = 4;
+				break;
+			case 17:
+				NewSegmentNumber = 21;
+				break;
+			case 18:
+				NewSegmentNumber = 6;
+				break;
+			case 19:
+				NewSegmentNumber = 12;
+				break;
+			case 21:
+				NewSegmentNumber = 9;
+				break;
+			case 22:
+				NewSegmentNumber = 15;
+				break;
+			default:
+				Serial1.print("Invalid CurrentCubeSegmentNumber: ");
+				Serial1.print(CurrentCubeSegmentNumber);
+				Serial1.println(" in SetupNextCubeMoveSegment() case 1");
+				break;
+			}
+		}
 		break;
 	case 2:
-		NewSegmentNumber = Cube.RandomPickOfTwo(13, 14);
+		// rotate around the edges of an outer Y plane
+		CubeMoveSegmentCounter++;
+		if (CubeMoveSegmentCounter >= CubeMoveSegmentTarget) {
+			CubeMoveSegmentCounter = 0;
+			CubeMoveMode = 3;
+			NewSegmentNumber = Cube.RandomPickOfSixteen(0, 1, 3, 4, 6, 7, 9, 10, 13, 14, 16, 17, 19, 20, 22, 23);
+		} else {
+			switch (CurrentCubeSegmentNumber) {
+			case 0:
+				NewSegmentNumber = 5;
+				break;
+			case 2:
+				NewSegmentNumber = 13;
+				break;
+			case 3:
+				NewSegmentNumber = 2;
+				break;
+			case 5:
+				NewSegmentNumber = 16;
+				break;
+			case 7:
+				NewSegmentNumber = 11;
+				break;
+			case 8:
+				NewSegmentNumber = 20;
+				break;
+			case 10:
+				NewSegmentNumber = 8;
+				break;
+			case 11:
+				NewSegmentNumber = 23;
+				break;
+			case 12:
+				NewSegmentNumber = 0;
+				break;
+			case 13:
+				NewSegmentNumber = 15;
+				break;
+			case 15:
+				NewSegmentNumber = 3;
+				break;
+			case 16:
+				NewSegmentNumber = 12;
+				break;
+			case 18:
+				NewSegmentNumber = 7;
+				break;
+			case 20:
+				NewSegmentNumber = 21;
+				break;
+			case 21:
+				NewSegmentNumber = 10;
+				break;
+			case 23:
+				NewSegmentNumber = 18;
+				break;
+			default:
+				Serial1.print("Invalid CurrentCubeSegmentNumber: ");
+				Serial1.print(CurrentCubeSegmentNumber);
+				Serial1.println(" in SetupNextCubeMoveSegment() case 2");
+				break;
+			}
+		}
 		break;
 	case 3:
-		NewSegmentNumber = Cube.RandomPickOfTwo(1, 2);
-		break;
-	case 4:
-		NewSegmentNumber = Cube.RandomPickOfTwo(10, 11);
-		break;
-	case 5:
-		NewSegmentNumber = Cube.RandomPickOfTwo(16, 17);
-		break;
-	case 6:
-		NewSegmentNumber = Cube.RandomPickOfTwo(0, 2);
-		break;
-	case 7:
-		NewSegmentNumber = Cube.RandomPickOfTwo(9, 11);
-		break;
-	case 8:
-		NewSegmentNumber = Cube.RandomPickOfTwo(19, 20);
-		break;
-	case 9:
-		NewSegmentNumber = Cube.RandomPickOfTwo(3, 5);
-		break;
-	case 10:
-		NewSegmentNumber = Cube.RandomPickOfTwo(6, 8);
-		break;
-	case 11:
-		NewSegmentNumber = Cube.RandomPickOfTwo(22, 23);
-		break;
-	case 12:
-		NewSegmentNumber = Cube.RandomPickOfTwo(0, 1);
-		break;
-	case 13:
-		NewSegmentNumber = Cube.RandomPickOfTwo(15, 17);
-		break;
-	case 14:
-		NewSegmentNumber = Cube.RandomPickOfTwo(18, 20);
-		break;
-	case 15:
-		NewSegmentNumber = Cube.RandomPickOfTwo(3, 4);
-		break;
-	case 16:
-		NewSegmentNumber = Cube.RandomPickOfTwo(12, 14);
-		break;
-	case 17:
-		NewSegmentNumber = Cube.RandomPickOfTwo(21, 23);
-		break;
-	case 18:
-		NewSegmentNumber = Cube.RandomPickOfTwo(6, 7);
-		break;
-	case 19:
-		NewSegmentNumber = Cube.RandomPickOfTwo(12, 13);
-		break;
-	case 20:
-		NewSegmentNumber = Cube.RandomPickOfTwo(21, 22);
-		break;
-	case 21:
-		NewSegmentNumber = Cube.RandomPickOfTwo(9, 10);
-		break;
-	case 22:
-		NewSegmentNumber = Cube.RandomPickOfTwo(15, 16);
-		break;
-	case 23:
-		NewSegmentNumber = Cube.RandomPickOfTwo(18, 19);
+		// rotate around the edges of an outer Z plane
+		CubeMoveSegmentCounter++;
+		if (CubeMoveSegmentCounter >= CubeMoveSegmentTarget) {
+			CubeMoveSegmentCounter = 0;
+			CubeMoveMode = 1;
+			NewSegmentNumber = Cube.RandomPickOfSixteen(1, 2, 4, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 19, 21, 22);
+		} else {
+			switch (CurrentCubeSegmentNumber) {
+			case 0:
+				NewSegmentNumber = 4;
+				break;
+			case 1:
+				NewSegmentNumber = 7;
+				break;
+			case 3:
+				NewSegmentNumber = 1;
+				break;
+			case 4:
+				NewSegmentNumber = 10;
+				break;
+			case 6:
+				NewSegmentNumber = 0;
+				break;
+			case 7:
+				NewSegmentNumber = 9;
+				break;
+			case 9:
+				NewSegmentNumber = 3;
+				break;
+			case 10:
+				NewSegmentNumber = 6;
+				break;
+			case 13:
+				NewSegmentNumber = 17;
+				break;
+			case 14:
+				NewSegmentNumber = 20;
+				break;
+			case 16:
+				NewSegmentNumber = 14;
+				break;
+			case 17:
+				NewSegmentNumber = 23;
+				break;
+			case 19:
+				NewSegmentNumber = 13;
+				break;
+			case 20:
+				NewSegmentNumber = 22;
+				break;
+			case 22:
+				NewSegmentNumber = 16;
+				break;
+			case 23:
+				NewSegmentNumber = 19;
+				break;
+			default:
+				Serial1.print("Invalid CurrentCubeSegmentNumber: ");
+				Serial1.print(CurrentCubeSegmentNumber);
+				Serial1.println(" in SetupNextCubeMoveSegment() case 3");
+				break;
+			}
+		}
 		break;
 	}
 	CurrentCubeSegmentNumber = NewSegmentNumber;

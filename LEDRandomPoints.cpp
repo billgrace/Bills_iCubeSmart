@@ -44,22 +44,28 @@ void LEDRandomPoints::StepRandomPoints() {
     case 0:
       // Add a new point
       // ... Find a blank spot
-      XYZ = Cube.RandomPositionWhereLEDIsOff();
+      XYZ = Cube.RandomPositionWhereLEDIs(Off);
       // ... Add a new point
-      Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), Cube.RandomColor(), Cube.RandomColor(), Cube.RandomColor());
+      if (XYZ > -1) {
+        Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), Cube.RandomColor(), Cube.RandomColor(), Cube.RandomColor());
+      }
       break;
     case 1:
       // Erase an existing point
       // ... Find a filled spot
-      XYZ = Cube.RandomPositionWhereLEDIsOn();
+      XYZ = Cube.RandomPositionWhereLEDIs(On);
       // ... Erase the point there
-      Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), 0, 0, 0);
+      if (XYZ > -1) {
+        Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), 0, 0, 0);
+      }
       break;
     }
   } else {
     // At the end, gradually extinguish the remaining points
-    XYZ = Cube.RandomPositionWhereLEDIsOn();
-    Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), 0, 0, 0);
+    XYZ = Cube.RandomPositionWhereLEDIs(On);
+    if (XYZ > -1) {
+      Cube.SetLEDColor(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ), 0, 0, 0);
+    }
   }
   StepCount++;
   if (StepCount > (MaxPoints + IntroCount)) {

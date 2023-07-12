@@ -12,6 +12,14 @@
 Move a center from one corner of the LED cube to another, then another.
 Allow a configurable space from the corner to the center.
 
+CubeMoveMode:
+	0 => randomly traverse all the edges of the cube
+	1 => rotate around the edges of the X = 0 plane, then to X = 7 & back
+	2 => rotate around the edges of the Y = 0 plane, then to Y = 7 & back
+	3 => rotate around the edges of the Z = 0 plane, then to Z = 7 & back
+
+CubeMoveSegmentCounter/Target = how long before switching to the other side.
+
 
 #####################################################
 #####################################################
@@ -227,10 +235,13 @@ private:
 	int CurrentPongMoveX;
 	int CurrentPongMoveY;
 	int CurrentPongMoveZ;
+	int CubeMoveMode;
 	int NewX;
 	int NewY;
 	int NewZ;
 	int CurrentCubeSegmentNumber;
+	int CubeMoveSegmentCounter;
+	int CubeMoveSegmentTarget;
 	int DeltaX;
 	int DeltaY;
 	int DeltaZ;
@@ -359,7 +370,7 @@ private:
 	};
 public:
 	LEDMove();
-	void InitializeCubeMove(int Radius);
+	void InitializeCubeMove(int Radius, int Mode, int SegmentCountTarget);
 	bool AtEndOfCurrentCubeMoveSegment();
 	void AdvanceToNextCubeMovePosition();
 	int GetCurrentCubeMoveX();

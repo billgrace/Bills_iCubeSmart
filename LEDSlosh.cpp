@@ -22,6 +22,7 @@ void LEDSlosh::StartSlosh() {
 	FastPeriod = random(10, 20);
 	Cube.SetAnimationStepSpeedPeriodTo(FastPeriod);
 	Move.InitializeSloshMove();
+	Mode = random(0, 2);
 	StepCounter = 0;
 	StepTarget = random(200, 500);
 	LeadRed = Cube.RandomColor();
@@ -103,7 +104,14 @@ void LEDSlosh::DrawSlosh(bool OffOn) {
 
 void LEDSlosh::DrawSegment(int X, int Z, int Red, int Green, int Blue) {
 	for (int Y = 0; Y < 8; Y++) {
-		Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+		switch (Mode) {
+		case 0:
+			Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			break;
+		case 1:
+			Cube.SetLEDColor(Y, X, Z, Red, Green, Blue);
+			break;
+		}
 	}
 }
 

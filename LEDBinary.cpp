@@ -37,7 +37,7 @@ void LEDBinary::StartBinary() {
 	for (int center = 0; center < 8; center++) {
 		Angles[center] = random(0, 8);
 	}
-	Move.InitializeCubeMove(2);
+	Move.InitializeCubeMove(2, 0, 10);
 }
 
 void LEDBinary::StepBinary() {
@@ -129,59 +129,63 @@ void LEDBinary::DrawObject(int ObjectIndex, int X, int Y, int Z, bool OffOn) {
 }
 
 int LEDBinary::GetXOffset(int angle) {
+	int ReturnValue = 0;
 	switch(angle) {
 	case 0:
-		return 1;
+		ReturnValue = 1;
 		break;
 	case 1:
-		return 1;
+		ReturnValue = 1;
 		break;
 	case 2:
-		return 0;
+		ReturnValue = 0;
 		break;
 	case 3:
-		return -1;
+		ReturnValue = -1;
 		break;
 	case 4:
-		return -1;
+		ReturnValue = -1;
 		break;
 	case 5:
-		return -1;
+		ReturnValue = -1;
 		break;
 	case 6:
-		return 0;
+		ReturnValue = 0;
 		break;
 	case 7:
-		return 1;
+		ReturnValue = 1;
 		break;
 	}
+	return ReturnValue;
 }
 
 int LEDBinary::GetYOffset(int angle) {
+	int ReturnValue = 0;
 	switch(angle) {
 	case 0:
-		return 0;
+		ReturnValue = 0;
 		break;
 	case 1:
-		return 1;
+		ReturnValue = 1;
 		break;
 	case 2:
-		return 1;
+		ReturnValue = 1;
 		break;
 	case 3:
-		return 1;
+		ReturnValue = 1;
 		break;
 	case 4:
-		return 0;
+		ReturnValue = 0;
 		break;
 	case 5:
-		return -1;
+		ReturnValue = -1;
 		break;
 	case 6:
-		return -1;
+		ReturnValue = -1;
 		break;
 	case 7:
-		return -1;
+		ReturnValue = -1;
 		break;
 	}
+	return ReturnValue;
 }

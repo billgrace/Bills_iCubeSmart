@@ -324,6 +324,7 @@ int LEDSlidingCube::GetCornerCompositeCoordinate(int Index) {
 }
 
 bool LEDSlidingCube::ThereIsACubePlusX() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 1) || (EmptyIndex == 3) || (EmptyIndex == 5) || (EmptyIndex == 7)) {
@@ -343,15 +344,17 @@ bool LEDSlidingCube::ThereIsACubePlusX() {
 		}
 		break;
 	}
+	return ReturnValue;
 }
 
 bool LEDSlidingCube::ThereIsACubeMinusX() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 0) || (EmptyIndex == 2) || (EmptyIndex == 4) || (EmptyIndex == 6)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	case 64:
@@ -359,21 +362,23 @@ bool LEDSlidingCube::ThereIsACubeMinusX() {
 			(EmptyIndex == 16) || (EmptyIndex == 20) || (EmptyIndex == 24) || (EmptyIndex == 28) ||
 			(EmptyIndex == 32) || (EmptyIndex == 36) || (EmptyIndex == 40) || (EmptyIndex == 44) ||
 			(EmptyIndex == 48) || (EmptyIndex == 52) || (EmptyIndex == 56) || (EmptyIndex == 60)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	}
+	return ReturnValue;
 }
 
 bool LEDSlidingCube::ThereIsACubePlusY() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 2) || (EmptyIndex == 3) || (EmptyIndex == 6) || (EmptyIndex == 7)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	case 64:
@@ -381,21 +386,23 @@ bool LEDSlidingCube::ThereIsACubePlusY() {
 			(EmptyIndex == 28) || (EmptyIndex == 29) || (EmptyIndex == 30) || (EmptyIndex == 31) ||
 			(EmptyIndex == 44) || (EmptyIndex == 45) || (EmptyIndex == 46) || (EmptyIndex == 47) ||
 			(EmptyIndex == 60) || (EmptyIndex == 61) || (EmptyIndex == 62) || (EmptyIndex == 63)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	}
+	return ReturnValue;
 }
 
 bool LEDSlidingCube::ThereIsACubeMinusY() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 0) || (EmptyIndex == 1) || (EmptyIndex == 4) || (EmptyIndex == 5)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	case 64:
@@ -403,21 +410,23 @@ bool LEDSlidingCube::ThereIsACubeMinusY() {
 			(EmptyIndex == 16) || (EmptyIndex == 17) || (EmptyIndex == 18) || (EmptyIndex == 19) ||
 			(EmptyIndex == 32) || (EmptyIndex == 33) || (EmptyIndex == 34) || (EmptyIndex == 35) ||
 			(EmptyIndex == 48) || (EmptyIndex == 49) || (EmptyIndex == 50) || (EmptyIndex == 51)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	}
+	return ReturnValue;
 }
 
 bool LEDSlidingCube::ThereIsACubePlusZ() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 4) || (EmptyIndex == 5) || (EmptyIndex == 6) || (EmptyIndex == 7)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	case 64:
@@ -425,21 +434,23 @@ bool LEDSlidingCube::ThereIsACubePlusZ() {
 			(EmptyIndex == 52) || (EmptyIndex == 53) || (EmptyIndex == 54) || (EmptyIndex == 55) ||
 			(EmptyIndex == 56) || (EmptyIndex == 57) || (EmptyIndex == 58) || (EmptyIndex == 59) ||
 			(EmptyIndex == 60) || (EmptyIndex == 61) || (EmptyIndex == 62) || (EmptyIndex == 63)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	}
+	return ReturnValue;
 }
 
 bool LEDSlidingCube::ThereIsACubeMinusZ() {
+	bool ReturnValue = false;
 	switch(NumberOfCubes) {
 	case 8:
 		if ((EmptyIndex == 0) || (EmptyIndex == 1) || (EmptyIndex == 2) || (EmptyIndex == 3)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	case 64:
@@ -447,10 +458,11 @@ bool LEDSlidingCube::ThereIsACubeMinusZ() {
 			(EmptyIndex == 4) || (EmptyIndex == 5) || (EmptyIndex == 6) || (EmptyIndex == 7) ||
 			(EmptyIndex == 8) || (EmptyIndex == 9) || (EmptyIndex == 10) || (EmptyIndex == 11) ||
 			(EmptyIndex == 12) || (EmptyIndex == 13) || (EmptyIndex == 14) || (EmptyIndex == 15)) {
-			return false;
+			ReturnValue = false;
 		} else {
-			return true;
+			ReturnValue = true;
 		}
 		break;
 	}
+	return ReturnValue;
 }

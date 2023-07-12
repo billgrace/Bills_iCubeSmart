@@ -32,6 +32,9 @@
 #include "LEDSHape.h"
 #include "LEDCombo1.h"
 #include "LEDCombo2.h"
+#include "LEDRandomFill.h"
+#include "LEDSonar.h"
+#include "LEDRadar.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -63,6 +66,9 @@ extern LEDBinary Binary;
 extern LEDShape Shape;
 extern LEDCombo1 Combo1;
 extern LEDCombo2 Combo2;
+extern LEDRandomFill RandomFill;
+extern LEDSonar Sonar;
+extern LEDRadar Radar;
 
 LEDCube::LEDCube() {
   TestMode = false;
@@ -234,6 +240,15 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 27:
         Combo2.StepCombo2();
+        break;
+      case 28:
+        RandomFill.StepRandomFill();
+        break;
+      case 29:
+        Sonar.StepSonar();
+        break;
+      case 30:
+        Radar.StepRadar();
         break;
       default:
         Serial1.println("Default case in AnimationStepThrottle()");
@@ -419,9 +434,24 @@ int CandidateAnimationIndex;
     Combo1.StartCombo1();
     break;
   case 27:
-    SuggestedAnimationDuration = Combo1.SuggestedNumberOfAnimationCycles();
+    SuggestedAnimationDuration = Combo2.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Combo2.StartCombo2();
+    break;
+  case 28:
+    SuggestedAnimationDuration = RandomFill.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    RandomFill.StartRandomFill();
+    break;
+  case 29:
+    SuggestedAnimationDuration = Sonar.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Sonar.StartSonar();
+    break;
+  case 30:
+    SuggestedAnimationDuration = Radar.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Radar.StartRadar();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");
@@ -444,92 +474,160 @@ int LEDCube::RandomButDifferent(int ToBeAvoided, int LowEnd, int HighEnd) {
 }
 
 int LEDCube::RandomPickOfTwo(int Candidate1, int Candidate2) {
+  int ReturnValue = 0;
   switch (random(0, 2)) {
   case 0:
-    return Candidate1;
+    ReturnValue = Candidate1;
     break;
   case 1:
-    return Candidate2;
+    ReturnValue = Candidate2;
     break;
   }
+  return ReturnValue;
 }
 
 int LEDCube::RandomPickOfThree(int Candidate1, int Candidate2, int Candidate3) {
+  int ReturnValue = 0;
   switch (random(0, 3)) {
   case 0:
-    return Candidate1;
+    ReturnValue = Candidate1;
     break;
   case 1:
-    return Candidate2;
+    ReturnValue = Candidate2;
     break;
   case 2:
-    return Candidate3;
+    ReturnValue = Candidate3;
     break;
   }
+  return ReturnValue;
 }
 
 int LEDCube::RandomPickOfFour(int Candidate1, int Candidate2, int Candidate3, int Candidate4) {
+  int ReturnValue = 0;
   switch (random(0, 4)) {
   case 0:
-    return Candidate1;
+    ReturnValue = Candidate1;
     break;
   case 1:
-    return Candidate2;
+    ReturnValue = Candidate2;
     break;
   case 2:
-    return Candidate3;
+    ReturnValue = Candidate3;
     break;
   case 3:
-    return Candidate4;
+    ReturnValue = Candidate4;
     break;
   }
+  return ReturnValue;
 }
 
 int LEDCube::RandomPickOfEight(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8) {
+  int ReturnValue = 0;
   switch (random(0, 8)) {
   case 0:
-    return Candidate1;
+    ReturnValue = Candidate1;
     break;
   case 1:
-    return Candidate2;
+    ReturnValue = Candidate2;
     break;
   case 2:
-    return Candidate3;
+    ReturnValue = Candidate3;
     break;
   case 3:
-    return Candidate4;
+    ReturnValue = Candidate4;
     break;
   case 4:
-    return Candidate5;
+    ReturnValue = Candidate5;
     break;
   case 5:
-    return Candidate6;
+    ReturnValue = Candidate6;
     break;
   case 6:
-    return Candidate7;
+    ReturnValue = Candidate7;
     break;
   case 7:
-    return Candidate8;
+    ReturnValue = Candidate8;
     break;
   }
+  return ReturnValue;
 }
 
+int LEDCube::RandomPickOfSixteen(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8, int Candidate9, int Candidate10, int Candidate11, int Candidate12, int Candidate13, int Candidate14, int Candidate15, int Candidate16) {
+  int ReturnValue = 0;
+  switch (random(0, 16)) {
+  case 0:
+    ReturnValue = Candidate1;
+    break;
+  case 1:
+    ReturnValue = Candidate2;
+    break;
+  case 2:
+    ReturnValue = Candidate3;
+    break;
+  case 3:
+    ReturnValue = Candidate4;
+    break;
+  case 4:
+    ReturnValue = Candidate5;
+    break;
+  case 5:
+    ReturnValue = Candidate6;
+    break;
+  case 6:
+    ReturnValue = Candidate7;
+    break;
+  case 7:
+    ReturnValue = Candidate8;
+    break;
+  case 8:
+    ReturnValue = Candidate9;
+    break;
+  case 9:
+    ReturnValue = Candidate10;
+    break;
+  case 10:
+    ReturnValue = Candidate11;
+    break;
+  case 11:
+    ReturnValue = Candidate12;
+    break;
+  case 12:
+    ReturnValue = Candidate13;
+    break;
+  case 13:
+    ReturnValue = Candidate14;
+    break;
+  case 14:
+    ReturnValue = Candidate15;
+    break;
+  case 15:
+    ReturnValue = Candidate16;
+    break;
+  }
+  return ReturnValue;
+}
+
+
 int LEDCube::NextIndex(int CurrentIndex, int NumberOfIndexes) {
+  int ReturnValue = 0;
   int TentativeReturnIndex = CurrentIndex + 1;
   if (TentativeReturnIndex >= NumberOfIndexes) {
-    return 0;
+    ReturnValue = 0;
   } else {
-    return TentativeReturnIndex;
+    ReturnValue = TentativeReturnIndex;
   }
+  return ReturnValue;
 }
 
 int LEDCube::PreviousIndex(int CurrentIndex, int NumberOfIndexes) {
+  int ReturnValue = 0;
   int TentativeReturnIndex = CurrentIndex - 1;
   if (TentativeReturnIndex <= 0) {
-    return NumberOfIndexes - 1;
+    ReturnValue = NumberOfIndexes - 1;
   } else {
-    return TentativeReturnIndex;
+    ReturnValue = TentativeReturnIndex;
   }
+  return ReturnValue;
 }
 
 int LEDCube::RandomColor() {
@@ -742,29 +840,31 @@ int LEDCube::DimmerColor(int Color) {
 }
 
 int LEDCube::RandomSolidColor() {
+  int ReturnValue = 0;
   switch(random(0, 7)) {
   case 0:
-    return CompositeColor(7, 0, 0);
+    ReturnValue = CompositeColor(7, 0, 0);
     break;
   case 1:
-    return CompositeColor(0, 7, 0);
+    ReturnValue = CompositeColor(0, 7, 0);
     break;
   case 2:
-    return CompositeColor(0, 0, 7);
+    ReturnValue = CompositeColor(0, 0, 7);
     break;
   case 3:
-    return CompositeColor(7, 7, 0);
+    ReturnValue = CompositeColor(7, 7, 0);
     break;
   case 4:
-    return CompositeColor(7, 0, 7);
+    ReturnValue = CompositeColor(7, 0, 7);
     break;
   case 5:
-    return CompositeColor(0, 7, 7);
+    ReturnValue = CompositeColor(0, 7, 7);
     break;
   case 6:
-    return CompositeColor(7, 7, 7);
+    ReturnValue = CompositeColor(7, 7, 7);
     break;
   }
+  return ReturnValue;
 }
 
 
@@ -792,16 +892,8 @@ int LEDCube::RandomPositionWhereLEDIs(bool OnOrOff) {
       return CompositePosition(X, Y, Z);
     }
   }
-  // Fail to center of the cube if too many unsuccessful tries
-  return CompositePosition(4, 4, 4);
-}
-
-int LEDCube::RandomPositionWhereLEDIsOn() {
-  return RandomPositionWhereLEDIs(true);
-}
-
-int LEDCube::RandomPositionWhereLEDIsOff() {
-  return RandomPositionWhereLEDIs(false);
+  // Fail to come up with a requested position
+  return -1;
 }
 
 int LEDCube::NearbyCoordinate(int Coordinate, int Distance) {
@@ -828,11 +920,13 @@ int LEDCube::ZPartOf(int CompositePosition) {
 }
 
 int LEDCube::CenterBias(int Position) {
+  int ReturnValue = 0;
   if (Position > 3) {
-    return -1;
+    ReturnValue = -1;
   } else {
-    return 1;
+    ReturnValue = 1;
   }
+  return ReturnValue;
 }
 
 void LEDCube::ClearImage() {
@@ -854,10 +948,13 @@ void LEDCube::FillLayer(int Layer, int Red, int Green, int Blue) {
 }
 
 bool LEDCube::ThisLEDIsOn(int X, int Y, int Z) {
+  bool ReturnValue = false;
   if (LEDIsOn[X][Y][Z] == 1) {
-    return true;
+    ReturnValue = true;
+  } else {
+    ReturnValue = false;
   }
-  return false;
+  return ReturnValue;
 }
 
 void LEDCube::SetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop, int Red, int Green, int Blue) {
@@ -987,6 +1084,7 @@ int LEDCube::GetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop) {
     }
     IntensityBitIntegerEquivalent = IntensityBitIntegerEquivalent << 1;
   }
+  return CompositeColor(RedIntensity, GreenIntensity, BlueIntensity);
 }
 
 void LEDCube::RenderImageToPhysicalCube() {
@@ -1067,122 +1165,130 @@ void LEDCube::PaintRainbow() {
 
 // Convert X coordinate to RED segment's shift register byte index
 int LEDCube::RedXCoordinateToShiftRegisterByteIndex(int X) {
+  int ReturnValue = 0;
   switch(X) {
     case 0:
-      return 23;
+      ReturnValue = 23;
       break;
     case 1:
-      return 22;
+      ReturnValue = 22;
       break;
     case 2:
-      return 17;
+      ReturnValue = 17;
       break;
     case 3:
-      return 16;
+      ReturnValue = 16;
       break;
     case 4:
-      return 11;
+      ReturnValue = 11;
       break;
     case 5:
-      return 10;
+      ReturnValue = 10;
       break;
     case 6:
-      return 5;
+      ReturnValue = 5;
       break;
     case 7:
-      return 4;
+      ReturnValue = 4;
       break;
   }
+  return ReturnValue;
 }
 
 // Convert X coordinate to GREEN segment's shift register byte index
 int LEDCube::GreenXCoordinateToShiftRegisterByteIndex(int X) {
+  int ReturnValue = 0;
   switch(X) {
     case 0:
-      return 19;
+      ReturnValue = 19;
       break;
     case 1:
-      return 18;
+      ReturnValue = 18;
       break;
     case 2:
-      return 13;
+      ReturnValue = 13;
       break;
     case 3:
-      return 12;
+      ReturnValue = 12;
       break;
     case 4:
-      return 7;
+      ReturnValue = 7;
       break;
     case 5:
-      return 6;
+      ReturnValue = 6;
       break;
     case 6:
-      return 1;
+      ReturnValue = 1;
       break;
     case 7:
-      return 0;
+      ReturnValue = 0;
       break;
   }
+  return ReturnValue;
 }
 
 // Convert X coordinate to BLUE segment's shift register byte index
 int LEDCube::BlueXCoordinateToShiftRegisterByteIndex(int X) {
+  int ReturnValue = 0;
   switch(X) {
     case 0:
-      return 21;
+      ReturnValue = 21;
       break;
     case 1:
-      return 20;
+      ReturnValue = 20;
       break;
     case 2:
-      return 15;
+      ReturnValue = 15;
       break;
     case 3:
-      return 14;
+      ReturnValue = 14;
       break;
     case 4:
-      return 9;
+      ReturnValue = 9;
       break;
     case 5:
-      return 8;
+      ReturnValue = 8;
       break;
     case 6:
-      return 3;
+      ReturnValue = 3;
       break;
     case 7:
-      return 2;
+      ReturnValue = 2;
       break;
   }
+  return ReturnValue;
 }
 
 // Convert Y coordinate to bit mask
 int LEDCube::YCoordinateToBitMask(int Y) {
+  int ReturnValue = 0;
   switch(Y) {
     case 0:
-      return 128;
+      ReturnValue = 128;
       break;
     case 1:
-      return 64;
+      ReturnValue = 64;
       break;
     case 2:
-      return 32;
+      ReturnValue = 32;
       break;
     case 3:
-      return 16;
+      ReturnValue = 16;
       break;
     case 4:
-      return 8;
+      ReturnValue = 8;
       break;
     case 5:
-      return 4;
+      ReturnValue = 4;
       break;
     case 6:
-      return 2;
+      ReturnValue = 2;
       break;
     case 7:
-      return 1;
+      ReturnValue = 1;
       break;
   }
+  return ReturnValue;
 }
 
 

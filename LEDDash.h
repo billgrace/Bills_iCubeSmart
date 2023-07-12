@@ -24,9 +24,6 @@ private:
 	byte Trail[TrailLength][10];
 	int NumberOfStepsToPerform;
 	int StepCounter;
-	int X;
-	int Y;
-	int Z;
 	// Direction:
 	// 0 +X
 	// 1 +Y

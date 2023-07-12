@@ -4,6 +4,9 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+#define On true
+#define Off false
+
 // Demultiplexer (74HC138):
 #define A0                  PB0     // A0
 #define A1                  PB1     // A1
@@ -118,6 +121,7 @@ class LEDCube {
     int RandomPickOfThree(int Candidate1, int Candidate2, int Candidate3);
     int RandomPickOfFour(int Candidate1, int Candidate2, int Candidate3, int Candidate4);
     int RandomPickOfEight(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8);
+    int RandomPickOfSixteen(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8, int Candidate9, int Candidate10, int Candidat11, int Candidate12, int Candidate13, int Candidate14, int Candidate15, int Candidate16);
     int NextIndex(int CurrentIndex, int NumberOfIndexes);
     int PreviousIndex(int CurrentIndex, int NumberOfIndexes);
     int RandomColor();
@@ -135,8 +139,8 @@ class LEDCube {
     int RandomDeltaPosition();
     int CompositePosition(int X, int Y, int Z);
     int RandomPositionWhereLEDIs(bool OnOrOff);
-    int RandomPositionWhereLEDIsOn();
-    int RandomPositionWhereLEDIsOff();
+    // int RandomPositionWhereLEDIsOn();
+    // int RandomPositionWhereLEDIsOff();
     int NearbyCoordinate(int Coordinate, int Distance);
     int XPartOf(int CompositePosition);
     int YPartOf(int CompositePosition);
@@ -168,7 +172,7 @@ class LEDCube {
     int TestAlternateIndex = 0;
     int CurrentAnimationIndex = 0;
     int LastAnimationIndex = 0;
-    int NumberOfAnimationsImplemented = 28;
+    int NumberOfAnimationsImplemented = 31;
     int RecentAnimationIndexes[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     byte LEDIsOn[8][8][8];
     byte ColorIntensityIndexSelector[ColorIntensityPassCount] = {0, 2, 1, 2, 1, 2, 2};

@@ -81,14 +81,16 @@ void LEDMovingAxes::StartMovingAxes() {
 }
 
 int LEDMovingAxes::SetMotionDirectionChangeInterval(int MotionMode) {
+	int ReturnValue;
 	switch (MotionMode) {
 	case 0:
-		return random(3, 5);
+		ReturnValue = random(3, 5);
 		break;
 	case 1:
-		return random(13, 25);
+		ReturnValue = random(13, 25);
 		break;
 	}
+	return ReturnValue;
 }
 
 // Something to show

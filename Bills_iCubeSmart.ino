@@ -32,6 +32,9 @@
 #include "LEDShape.h"           // Animation 25
 #include "LEDCombo1.h"          // Animation 26
 #include "LEDCombo2.h"          // Animation 27
+#include "LEDRandomFill.h"      // Animation 28
+#include "LEDSonar.h"           // Animation 29
+#include "LEDRadar.h"           // Animation 30
 
 
 // Onboard LEDs:
@@ -89,6 +92,9 @@ LEDBinary Binary;
 LEDShape Shape;
 LEDCombo1 Combo1;
 LEDCombo2 Combo2;
+LEDRandomFill RandomFill;
+LEDSonar Sonar;
+LEDRadar Radar;
 
 // Serial input (development diagnostic) protocol:
 // Each serial packet starts with 'S' and ends with '\n'.
@@ -139,7 +145,7 @@ void TimerISR(void) {
 }
 
 void ReadIncomingSerial() {
-  static boolean SerialReceiveIsOngoing = false;
+  static bool SerialReceiveIsOngoing = false;
   static byte CurrentSerialIndex = 0;
   byte CurrentReceivedByte;
 

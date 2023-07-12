@@ -41,8 +41,10 @@ void LEDStarrySky::StepStarrySky() {
 		// We're still starting out so add new stars
 		if (0 == (StepCount % InitialTwinkleStagger)) {
 			// Meter how fast we add them so they don't all twinkle in synch
-			XYZ = Cube.RandomPositionWhereLEDIsOff();
-			StartAStarAt(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ));
+			XYZ = Cube.RandomPositionWhereLEDIs(Off);
+			if (XYZ > -1) {
+				StartAStarAt(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ));
+			}
 		}
 	}
 	// Scan and update all locations in the cube at each step
@@ -59,8 +61,10 @@ void LEDStarrySky::StepStarrySky() {
 							// IF we're not winding up, start a new star
 							if(StepCount <= (MaxSteps + IntroCount)) {
 								// Add a new star since we're not yet winding up and finishing
-								XYZ = Cube.RandomPositionWhereLEDIsOff();
-								StartAStarAt(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ));
+								XYZ = Cube.RandomPositionWhereLEDIs(Off);
+								if (XYZ > -1) {
+									StartAStarAt(Cube.XPartOf(XYZ), Cube.YPartOf(XYZ), Cube.ZPartOf(XYZ));
+								}
 							} else {
 								// We're finishing so don't add a new star AND quit if they're all gone now
 								if (ArrayIsEmpty()) {
