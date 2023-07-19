@@ -1,5 +1,12 @@
 // LEDCube.cpp
-
+/*
+This class has two main purposes:
+1 - Maintain a data array representing the physical LED cube and render that array
+      to the physical cube. The array is laid out in a human-sensible way such as
+      X value from 0 to 7 means leftmost to rightmost, Y 0..7 means bottom to top, etc.
+2 - All kinds of utility routines are located in this class so they'll be available
+      to all the animation classes. This saves a lot of duplicate code in the long run.
+*/
 #include <Arduino.h>
 #include <SPI.h>
 #include "LEDCube.h"
@@ -35,6 +42,8 @@
 #include "LEDRandomFill.h"
 #include "LEDSonar.h"
 #include "LEDRadar.h"
+#include "LEDLineFill.h"
+#include "LEDBarGraph.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -69,8 +78,20 @@ extern LEDCombo2 Combo2;
 extern LEDRandomFill RandomFill;
 extern LEDSonar Sonar;
 extern LEDRadar Radar;
+extern LEDLineFill LineFill;
+extern LEDBarGraph BarGraph;
 
+// The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
+  // "TestMode" is a development tool allowing a particular animation to be run over
+  //  and over without having to wait for it to be picked by the normal random process.
+  // "TestAnimationIndex" is the animation to be repeated
+  // "TestAlternateIndex" is an animation to be run between repeats of the animation
+  //   under test. This helps make visible when the test animation starts and stops.
+  //   The alternate index defaults to 1 - the "PointToLine" animation which is easy
+  //   to recognize and finishes fairly quickly. I don't think I've ever felt a need
+  //   to change the alternate to some other animation but the serial protocol DOES
+  //   include a function to do that. 
   TestMode = false;
   TestAnimationIndex = 0;
   TestAlternateIndex = 1;
@@ -90,6 +111,9 @@ LEDCube::LEDCube() {
   ClearImage();
 }
 
+// These routines are development helps. The "GlobalBoolean" and "GlobalInteger"
+//  routines allow animations being developed to use variables which can be set
+//  manually via the serial protocol.
 void LEDCube::ToggleTestMode() {
   TestMode = !TestMode;
 }
@@ -126,6 +150,13 @@ void LEDCube::SetTestAlternateIndex(int AnimationNumber) {
   TestAlternateIndex = AnimationNumber;
 }
 
+
+// The following two routines provide a way for each animation to decide when it
+//  should quit and allow another animation to begin. When an animation is started,
+//  it provides the number of "cycles" it should be allowed. As the animation is in
+//  operation, it increments the cycle counter whenever it wants and the central code
+//  which starts new animations knows it's time to move to a new animation when the
+//  cycle counter exceeds the initial number of cycles it was given.
 void LEDCube::SetAnimationDurationInCycles(int Cycles) {
   AnimationDurationInCycles = Cycles;
   AnimationDurationCycleCounter = 0;
@@ -135,17 +166,27 @@ void LEDCube::IncrementAnimationDurationCycleCount() {
   AnimationDurationCycleCounter++;
 }
 
+
+// Each animation calls this routine when it is started to tell the central code
+//  how often it should call the animation's "Step" routine.
 void LEDCube::SetAnimationStepSpeedPeriodTo(int Period) {
   AnimationStepSpeedPeriod = Period;
   AnimationStepSpeedCounter = 0;
 }
 
+// (this is another way an animation can specify how often it should be Step'd
 void LEDCube::SetRandomizedAnimationStepSpeedPeriod(int Period, int RandRange) {
   int MinimumRandomParameter = max(Period - RandRange, 2);
   AnimationStepSpeedPeriod = random(MinimumRandomParameter, Period + RandRange);
   AnimationStepSpeedCounter = 0;
 }
 
+
+// This routine is called every millisecond by the Timer1 interrupt service routine.
+// It checks a few things each time it's called:
+//  1) has the animation been paused by the serial protocol? if so do nothing
+//  2) is it time to start up a new animation? if so call the routine to do that
+//  3) is it time to call the current animation's "Step" routine? if so do that
 void LEDCube::AnimationStepThrottle() {
   if (AnimationPaused){
     return;
@@ -250,14 +291,25 @@ void LEDCube::AnimationStepThrottle() {
       case 30:
         Radar.StepRadar();
         break;
+      case 31:
+        LineFill.StepLineFill();
+        break;
+      case 32:
+        BarGraph.StepBarGraph();
+        break;
       default:
-        Serial1.println("Default case in AnimationStepThrottle()");
+        Serial1.print("Default case in AnimationStepThrottle(): ");
+        Serial1.println(CurrentAnimationIndex);
         break;
       }
     }
   }
 }
 
+
+// This routine is called when it's time to start up a new animation. It keeps track
+//  of the animations that have recently run so it can choose one which hasn't been
+//  run recently.
 void LEDCube::MoveOnToNextAnimation() {
 bool CandidateIndexIsRecent;
 bool NonRecentIndexHasBeenFound;
@@ -453,6 +505,16 @@ int CandidateAnimationIndex;
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Radar.StartRadar();
     break;
+  case 31:
+    SuggestedAnimationDuration = LineFill.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    LineFill.StartLineFill();
+    break;
+  case 32:
+    SuggestedAnimationDuration = BarGraph.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    BarGraph.StartBarGraph();
+    break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");
     SuggestedAnimationDuration = PlaneToCube.SuggestedNumberOfAnimationCycles();
@@ -462,6 +524,9 @@ int CandidateAnimationIndex;
   }
 }
 
+
+// ********************* Lots of handy utility routines ***********************
+// Same as Arduino's standard random number routine but WON'T allow a particular value
 int LEDCube::RandomButDifferent(int ToBeAvoided, int LowEnd, int HighEnd) {
   int ReturnValue = LowEnd;
   int AllowedAttempts = 10;
@@ -473,6 +538,7 @@ int LEDCube::RandomButDifferent(int ToBeAvoided, int LowEnd, int HighEnd) {
   return ReturnValue;
 }
 
+// Randomly pick between 2 candidate numbers
 int LEDCube::RandomPickOfTwo(int Candidate1, int Candidate2) {
   int ReturnValue = 0;
   switch (random(0, 2)) {
@@ -486,6 +552,7 @@ int LEDCube::RandomPickOfTwo(int Candidate1, int Candidate2) {
   return ReturnValue;
 }
 
+// Randomly pick between 3 candidate numbers
 int LEDCube::RandomPickOfThree(int Candidate1, int Candidate2, int Candidate3) {
   int ReturnValue = 0;
   switch (random(0, 3)) {
@@ -502,6 +569,7 @@ int LEDCube::RandomPickOfThree(int Candidate1, int Candidate2, int Candidate3) {
   return ReturnValue;
 }
 
+// Randomly pick between 4 candidate numbers
 int LEDCube::RandomPickOfFour(int Candidate1, int Candidate2, int Candidate3, int Candidate4) {
   int ReturnValue = 0;
   switch (random(0, 4)) {
@@ -521,6 +589,7 @@ int LEDCube::RandomPickOfFour(int Candidate1, int Candidate2, int Candidate3, in
   return ReturnValue;
 }
 
+// Randomly pick between 8 candidate numbers
 int LEDCube::RandomPickOfEight(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8) {
   int ReturnValue = 0;
   switch (random(0, 8)) {
@@ -552,6 +621,7 @@ int LEDCube::RandomPickOfEight(int Candidate1, int Candidate2, int Candidate3, i
   return ReturnValue;
 }
 
+// Randomly pick between 16 candidate numbers
 int LEDCube::RandomPickOfSixteen(int Candidate1, int Candidate2, int Candidate3, int Candidate4, int Candidate5, int Candidate6, int Candidate7, int Candidate8, int Candidate9, int Candidate10, int Candidate11, int Candidate12, int Candidate13, int Candidate14, int Candidate15, int Candidate16) {
   int ReturnValue = 0;
   switch (random(0, 16)) {
@@ -607,7 +677,7 @@ int LEDCube::RandomPickOfSixteen(int Candidate1, int Candidate2, int Candidate3,
   return ReturnValue;
 }
 
-
+// Return the next in a series of zero-based integers
 int LEDCube::NextIndex(int CurrentIndex, int NumberOfIndexes) {
   int ReturnValue = 0;
   int TentativeReturnIndex = CurrentIndex + 1;
@@ -619,6 +689,7 @@ int LEDCube::NextIndex(int CurrentIndex, int NumberOfIndexes) {
   return ReturnValue;
 }
 
+// Return the previous in a series of zero-based integers
 int LEDCube::PreviousIndex(int CurrentIndex, int NumberOfIndexes) {
   int ReturnValue = 0;
   int TentativeReturnIndex = CurrentIndex - 1;
@@ -630,14 +701,17 @@ int LEDCube::PreviousIndex(int CurrentIndex, int NumberOfIndexes) {
   return ReturnValue;
 }
 
+// Return a random color (0..7)
 int LEDCube::RandomColor() {
   return random(1, 8);
 }
 
+// Return a single integer that combines given red, green and blue parts
 int LEDCube::CompositeColor(int Red, int Green, int Blue) {
   return ( Red << 8 ) + ( Green << 4 ) + Blue;
 }
 
+// Break down a composite color into separate red, green and blue parts
 int LEDCube::RedPartOf(int CompositeColor) {
   return CompositeColor >> 8;
 }
@@ -650,6 +724,7 @@ int LEDCube::BluePartOf(int CompositeColor) {
   return CompositeColor & 7;
 }
 
+// Return a (composite) color which is somewhat "close" to the given RGB
 int LEDCube::NearbyColor(int Red, int Green, int Blue, int Distance) {
   int RedDelta;
   int NewRed;
@@ -770,6 +845,7 @@ int LEDCube::NearbyColor(int Red, int Green, int Blue, int Distance) {
   return CompositeColor(NewRed, NewGreen, NewBlue);
 }
 
+// Return a (composite) color which is very close to the given RGB
 int LEDCube::VeryCloseColor(int Red, int Green, int Blue) {
   int NewRed;
   int NewGreen;
@@ -809,6 +885,7 @@ int LEDCube::VeryCloseColor(int Red, int Green, int Blue) {
   return CompositeColor(NewRed, NewGreen, NewBlue);
 }
 
+// return a (composite) color which is very different from the given RGB
 int LEDCube::VeryDifferentColor(int Red, int Green, int Blue) {
   int NewRed;
   int NewGreen;
@@ -831,14 +908,25 @@ int LEDCube::VeryDifferentColor(int Red, int Green, int Blue) {
   return CompositeColor(NewRed, NewGreen, NewBlue);
 }
 
+// Return a sum of three (R or G or B) colors limited to 7 which is the max a color can be
 int LEDCube::SumOfThreeColors(int Color1, int Color2, int Color3) {
   return min(7, (Color1 + Color2 + Color3));
 }
 
+// Decriment the given color but don't allow it to go below 0
 int LEDCube::DimmerColor(int Color) {
   return max(0, Color - 1);
 }
 
+// Return a random (composite) color which is one of:
+// Red
+// Green
+// Blue
+// Magenta
+// Cyan
+// Yellow
+// White
+// ... i.e. a "solid" color where each of R and G and B are either all on or off
 int LEDCube::RandomSolidColor() {
   int ReturnValue = 0;
   switch(random(0, 7)) {
@@ -867,15 +955,17 @@ int LEDCube::RandomSolidColor() {
   return ReturnValue;
 }
 
-
+// Return a random position 0..7
 int LEDCube::RandomAxisPosition() {
   return random(0, 8);
 }
 
+// Return a random position delta: -1 or 1
 int LEDCube::RandomDeltaPosition() {
   return RandomPickOfTwo(-1, 1);
 }
 
+// Return a composite integer containing all three axis positions
 int LEDCube::CompositePosition(int X, int Y, int Z) {
   return ( X << 8 ) + ( Y << 4 ) + Z;
 }
@@ -896,6 +986,7 @@ int LEDCube::RandomPositionWhereLEDIs(bool OnOrOff) {
   return -1;
 }
 
+// Return a (composite) position which is within some distance of the given position
 int LEDCube::NearbyCoordinate(int Coordinate, int Distance) {
   int NewCoordinate = Coordinate + random(-Distance, Distance + 1);
   if (NewCoordinate < 0) {
@@ -907,6 +998,7 @@ int LEDCube::NearbyCoordinate(int Coordinate, int Distance) {
   return NewCoordinate;
 }
 
+// Return the X, Y and Z parts of a composite position
 int LEDCube::XPartOf(int CompositePosition) {
   return CompositePosition >> 8;
 }
@@ -919,6 +1011,8 @@ int LEDCube::ZPartOf(int CompositePosition) {
   return CompositePosition & 7;
 }
 
+// Given an axis position, return the delta which will move that position away
+//  from the LED cube sides and towards the LED cube center
 int LEDCube::CenterBias(int Position) {
   int ReturnValue = 0;
   if (Position > 3) {
@@ -929,6 +1023,7 @@ int LEDCube::CenterBias(int Position) {
   return ReturnValue;
 }
 
+// Turn off all the LEDs in the cube
 void LEDCube::ClearImage() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
@@ -939,6 +1034,7 @@ void LEDCube::ClearImage() {
   }
 }
 
+// Given a Z-axis value ("Layer"), fill that LED cube layer with a particular color
 void LEDCube::FillLayer(int Layer, int Red, int Green, int Blue) {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
@@ -947,6 +1043,7 @@ void LEDCube::FillLayer(int Layer, int Red, int Green, int Blue) {
   }
 }
 
+// Return true if a particular LED is on (any color), false if it's off
 bool LEDCube::ThisLEDIsOn(int X, int Y, int Z) {
   bool ReturnValue = false;
   if (LEDIsOn[X][Y][Z] == 1) {
@@ -957,6 +1054,9 @@ bool LEDCube::ThisLEDIsOn(int X, int Y, int Z) {
   return ReturnValue;
 }
 
+// Set the LED at the given location to the given color.
+//   Also update the secondary array that tracks whether each LED is
+//    on or off regardless of color.
 void LEDCube::SetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop, int Red, int Green, int Blue) {
   int Xindex = 0;
   int Yindex = 0;
@@ -1024,6 +1124,7 @@ void LEDCube::SetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop, 
   }
 }
 
+// Given an LED position, return the current (composite) color of that LED
 int LEDCube::GetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop) {
   int Xindex = 0;
   int Yindex = 0;
@@ -1087,6 +1188,30 @@ int LEDCube::GetLEDColor(int XLeftToRight, int YFrontToBack, int ZBottomToTop) {
   return CompositeColor(RedIntensity, GreenIntensity, BlueIntensity);
 }
 
+// This routine copies the LED color data array out to the physical shift registers and
+//  latch in such a way that the desired colors appear to the eye of anyone looking at
+//  the cube.
+// It's a bit convoluted and depends on the relative slowness of the human eye.
+// This routine runs two cycles and runs them both so fast that most people won't
+//  see any flicker in the LED cube.
+// The simple cycle consists of lighting up LEDs on one layer at a time. It happens so
+//  fast that all the layers *appear* to be lit up but actually, only one layer at a 
+//  time actually has its LEDs turned on. This cycle is driven by the for (int z...)
+//  loop which sends bits through the shift registers to light up (or not) each LED
+//  color (cathode) on a layer, turns on the common anodes for that layer then moves
+//  on to the next layer. This makes the LED cube *appear* to be lit up from top to
+//  bottom when in reality it's being lit up one layer at a time.
+// The more subtle cycle is driven by the outermost loop (for ColorIntensityPassCounter).
+//  This loop runs through 7 steps to implement the brightness of the colors.
+//  Each color (Red, Green, Blue) in each LED is assigned three bits to allow color
+//  intensity to range from 0 through 7. Each step of this cycle includes the entire
+//  set of all 8 layers *BUT* sends different color bits to the LED cathodes through
+//  the shift registers. Since the color brightness of each LED segment is controlled
+//  via three bits, there's one bit that counts as 4, one that counts as 2 and one
+//  that counts as 1 (standard binary encoding of 0 through 7). During the 7 steps of
+//  this color-intensity cycle the "4" bit is sent out 4 times, the "2" bit is sent
+//  out twice and the "1" bit is sent once. This causes the LEDs to appear to be
+//  brightest when all three bits are on and dimmest when only the "1" bit is on.
 void LEDCube::RenderImageToPhysicalCube() {
   // Loop through the color depths
   for (int ColorIntensityPassCounter = 0; ColorIntensityPassCounter < ColorIntensityPassCount; ColorIntensityPassCounter++) {
@@ -1107,7 +1232,7 @@ void LEDCube::RenderImageToPhysicalCube() {
   } // end for (int ColorIntensityPassCounter...
 }
 
-// Function to enable the anode drive for one of the 8 vertical layers:
+// Function to enable the anode drive which lights up one of the 8 vertical layers:
 void LEDCube::SwitchToLayer(int z) {
   if (z == 0) {
     digitalWrite(A0, LOW);

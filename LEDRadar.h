@@ -16,6 +16,7 @@ private:
 	int StepCounter;
 	int StepTarget;
 	int Angle;
+	int Direction;
 	int Mode;
 	int Red;
 	int Green;

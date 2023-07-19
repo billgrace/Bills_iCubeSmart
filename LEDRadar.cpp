@@ -23,6 +23,7 @@ void LEDRadar::StartRadar() {
 	StepCounter = 0;
 	StepTarget = random(50, 100);
 	Angle = random(0, 12);
+	Direction = random(0, 2);
 	Mode = random(0, 4);
 	Red = Cube.RandomColor();
 	Green = Cube.RandomColor();
@@ -37,9 +38,19 @@ void LEDRadar::StepRadar() {
 	}
 	// Turn off previous beam
 	DrawBeam(0, 0, 0);
-	Angle++;
-	if (Angle >= 12) {
-		Angle = 0;
+	switch (Direction) {
+	case 0:
+		Angle++;
+		if (Angle >= 12) {
+			Angle = 0;
+		}
+		break;
+	case 1:
+		Angle--;
+		if (Angle < 0) {
+			Angle = 11;
+		}
+		break;
 	}
 	// Light up new beam
 	DrawBeam(Red, Green, Blue);

@@ -18,6 +18,7 @@ int LEDBall::SuggestedNumberOfAnimationCycles() {
 }
 
 void LEDBall::StartBall() {
+	AntiMode = random(0, 2);
 	BallStyle = random(0, NumberOfBallStyles);
 	switch (BallStyle) {
 	case 0:
@@ -56,7 +57,7 @@ void LEDBall::StartBall() {
 
 void LEDBall::StepBall() {
 	// Erase previous
-	DrawBall(Move.GetCurrentCubeMoveX(), Move.GetCurrentCubeMoveY(), Move.GetCurrentCubeMoveZ(), 0, 0, 0);
+	DrawBalls(Move.GetCurrentCubeMoveX(), Move.GetCurrentCubeMoveY(), Move.GetCurrentCubeMoveZ(), 0, 0, 0);
 	// Determine next
 	if (Move.AtEndOfCurrentCubeMoveSegment()) {
 		CurrentSegmentCount++;
@@ -70,7 +71,20 @@ void LEDBall::StepBall() {
 		Move.AdvanceToNextCubeMovePosition();
 	}
 	// Draw next
-	DrawBall(Move.GetCurrentCubeMoveX(), Move.GetCurrentCubeMoveY(), Move.GetCurrentCubeMoveZ(), BallRed, BallGreen, BallBlue);
+	DrawBalls(Move.GetCurrentCubeMoveX(), Move.GetCurrentCubeMoveY(), Move.GetCurrentCubeMoveZ(), BallRed, BallGreen, BallBlue);
+}
+
+void LEDBall::DrawBalls(int X, int Y, int Z, int Red, int Green, int Blue) {
+	int AntiX;
+	int AntiY;
+	int AntiZ;
+	AntiX = 7 - X;
+	AntiY = 7 - Y;
+	AntiZ = 7 - Z;
+	DrawBall(X, Y, Z, Red, Green, Blue);
+	if (AntiMode == 1) {
+		DrawBall(AntiX, AntiY, AntiZ, Red, Green, Blue);
+	}
 }
 
 void LEDBall::DrawBall(int X, int Y, int Z, int Red, int Green, int Blue) {

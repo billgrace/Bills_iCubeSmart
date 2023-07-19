@@ -61,11 +61,13 @@ private:
 	int CurrentSegmentCount;
 	int MaxSegmentCount;
 	int BallStyle;
+	int AntiMode;
 public:
 	LEDBall();
 	int SuggestedNumberOfAnimationCycles();
 	void StartBall();
 	void StepBall();
+	void DrawBalls(int X, int Y, int Z, int Red, int Green, int Blue);
 	void DrawBall(int X, int Y, int Z, int Red, int Green, int Blue);
 };
 #endif

@@ -1,47 +1,122 @@
 // Bill_s_iCubeSmart
 
+// Arduino.h brings in many fundamental Arduino resources
 #include <Arduino.h>
+
+// SPI.h brings in serial communications
 #include <SPI.h>
+
+// LEDCube provides my own set of functions dealing with the iSmart LED cube 
 #include "LEDCube.h"
+
+// LEDMove provides motion functions for use by animations
 #include "LEDMove.h"
+
+// Put up a square, extend it into a cube, then back to the square
 #include "LEDPlaneToCube.h"     // Animation 0
+
+// Put up a single LED then extend it into a line
 #include "LEDPointToLine.h"     // Animation 1
+
+// Light up random LEDs with random colors. Erase them now and then to avoid filling the cube.
 #include "LEDRandomPoints.h"    // Animation 2
+
+// Fill the layers one at a time with colors that form a color gradient
 #include "LEDLinearFill.h"      // Animation 3
+
+// Fire an arc from a corner that falls into an exploding ball
 #include "LEDFireworkRocket.h"  // Animation 4
+
+// Fill the layers one at a time with random off/on to look like "surf"
 #include "LEDTide.h"            // Animation 5
+
+// Move one or more ball-like objects around the edges of the cube
 #include "LEDBall.h"            // Animation 6
+
+// Fill the cube with random colors and randomly change individual LED colors
 #include "LEDRandomFull.h"      // Animation 7
+
+// Make white-ish random LEDs start dim, get brighter then dimmer
 #include "LEDStarrySky.h"       // Animation 8
+
+// Make a fountain-like flow of LEDs coming up in the center and falling at the edges
 #include "LEDFountain.h"        // Animation 9
+
+// Make a flow of LED colors start at the top center and flow down the outer edges
 #include "LEDWaterfall.h"       // Animation 10
+
+// Make a square paddle rotate and move around
 #include "LEDWindmill.h"        // Animation 11
+
+// Make an LED zip around the edges of the cube, maybe with wings and always with a fading tail
 #include "LEDDash.h"            // Animation 12
+
+// Fill in spiral-like shapes with varying thicknesses
 #include "LEDSpiral.h"          // Animation 13
+
+// Fill in a horizontal spiral-like single layer, drop each LED to a lower layer then erase
 #include "LEDStringFall.h"      // Animation 14
+
+// Light up an outer plane with some shape then have it flop to another outer plane
 #include "LEDFlopWall.h"        // Animation 15
+
+// A shape bounces pong-like around in the cube
 #include "LEDPong.h"            // Animation 16
+
+// 1, 2 or 3 sets of axes move around. Sometimes lines, sometimes planes.
 #include "LEDMovingAxes.h"      // Animation 17
+
+// Patchy volumes fill up with random colors
 #include "LEDColorRegion.h"     // Animation 18
+
+// Blocks of random colors slide around one at a time
 #include "LEDSlidingCube.h"     // Animation 19
+
+// Try to look like the inside of a tokomak
 #include "LEDIter.h"            // Animation 20
+
+// Try to look like a liquid sloshing from one side of the cube to another
 #include "LEDSlosh.h"           // Animation 21
+
+// Pools of color in each corner squirt into a center pool
 #include "LEDPool.h"            // Animation 22
+
+// Rotate things around the vertical center of the cube
 #include "LEDRotor.h"           // Animation 23
+
+// Up to 8 pairs of dots "orbit" eachother and move around the cube
 #include "LEDBinary.h"          // Animation 24
+
+// Simple shapes appear, brighten then dim & disappera
 #include "LEDShape.h"           // Animation 25
+
+// Run FlopWall (#15) and Pong (#16) at the same time
 #include "LEDCombo1.h"          // Animation 26
+
+// Run Ball (#6) and Dash (#12) at the same time
 #include "LEDCombo2.h"          // Animation 27
+
+// Randomly pick unlit LEDs and set them to random colors until the cube is all lit
 #include "LEDRandomFill.h"      // Animation 28
+
+// Try to look like little spherical "pings" going off
 #include "LEDSonar.h"           // Animation 29
+
+// Try to look like a beam sweeping around the cube's vertical center
 #include "LEDRadar.h"           // Animation 30
 
+// Draw randomly colored lines
+#include "LEDLineFill.h"        // Animation 31
 
-// Onboard LEDs:
+// Make square columns rise and fall
+#include "LEDBarGraph.h"        // Animation 32
+
+
+// Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
 #define OnboardLEDGreen   PB9
 
-// Serial link to IDE:
+// Pin definitions for the serial link to Arduino IDE:
 #define RX            PA10
 #define TX            PA9
 HardwareSerial Serial1(RX, TX);
@@ -49,7 +124,7 @@ HardwareSerial Serial1(RX, TX);
 // Timer
 HardwareTimer Timer1(TIM1);
 
-// Onboard buttons:
+// Pin definitions for the buttons on the iSmart cube's microprocessor PCB:
 #define StartButton   PC0
 #define NextButton    PC1
 #define CycleButton   PC2
@@ -62,6 +137,7 @@ int StartButtonDebounceCounter = 0;
 int NextButtonDebounceCounter = 0;
 int CycleButtonDebounceCounter = 0;
 
+// Instantiate each of the classes
 LEDCube Cube;
 LEDMove Move;
 LEDPlaneToCube PlaneToCube;
@@ -95,17 +171,16 @@ LEDCombo2 Combo2;
 LEDRandomFill RandomFill;
 LEDSonar Sonar;
 LEDRadar Radar;
+LEDLineFill LineFill;
+LEDBarGraph BarGraph;
 
-// Serial input (development diagnostic) protocol:
-// Each serial packet starts with 'S' and ends with '\n'.
-// The data between the S and \n is one of:
-//   nnnnnn => XYZ coordinates (0..7) followed by RGB intensities (0..F)
-//   C => clear the entire cube
+// Serial link to the Arduino IDE
 const byte SerialPacketMaximumLength = 8;
 byte SerialReceivePacket[SerialPacketMaximumLength];
 char SerialSendPacket[SerialPacketMaximumLength];
 bool SerialDataAvailable = false; // set to true when a packet has been received.
 
+// Standard Arduino setup() (initialization) routine
 void setup() {
   // Onboard LEDs:
   pinMode(OnboardLEDRed, OUTPUT);
@@ -139,147 +214,8 @@ void setup() {
 
 }
 
-// Interrupt service routine for Timer1 Register A compare match ("TIMER1_COMPA_vect" is predefined for the hardware vector)
-void TimerISR(void) {
-  Cube.AnimationStepThrottle();
-}
-
-void ReadIncomingSerial() {
-  static bool SerialReceiveIsOngoing = false;
-  static byte CurrentSerialIndex = 0;
-  byte CurrentReceivedByte;
-
-  while (Serial1.available() > 0 && SerialDataAvailable == false) {
-    CurrentReceivedByte = Serial1.read();
-    if (SerialReceiveIsOngoing == true) {
-      // We're in the process of receiving a packet so place theis received byte into the receive buffer
-      SerialReceivePacket[CurrentSerialIndex] = CurrentReceivedByte;
-      CurrentSerialIndex++;
-      if (CurrentReceivedByte == '\n') {
-        // This was the final character of the serial packet
-        SerialDataAvailable = true;
-        SerialReceiveIsOngoing = false;
-        for (int i = 0; i < SerialPacketMaximumLength; i++) {
-          SerialSendPacket[i] = char(SerialReceivePacket[i]);
-        }
-        Serial1.write(SerialSendPacket);
-      }
-    } else {
-      // We're waiting for the packet start character
-      if ((CurrentReceivedByte == 'S') || (CurrentReceivedByte == 's')) {
-        // This is the start of a new packet
-        SerialReceiveIsOngoing = true;
-        SerialReceivePacket[0] = 'S';
-        CurrentSerialIndex = 1;
-      }
-    }
-  }
-}
-
-byte HexCharToByte(char hex) {
-  switch(hex) {
-    case '0':
-      return 0;
-      break;
-    case '1':
-      return 1;
-      break;
-    case '2':
-      return 2;
-      break;
-    case '3':
-      return 3;
-      break;
-    case '4':
-      return 4;
-      break;
-    case '5':
-      return 5;
-      break;
-    case '6':
-      return 6;
-      break;
-    case '7':
-      return 7;
-      break;
-    case '8':
-      return 8;
-      break;
-    case '9':
-      return 9;
-      break;
-    case 'A':
-    case 'a':
-      return 10;
-      break;
-    case 'B':
-    case 'b':
-      return 11;
-      break;
-    case 'C':
-    case 'c':
-      return 12;
-      break;
-    case 'D':
-    case 'd':
-      return 13;
-      break;
-    case 'E':
-    case 'e':
-      return 14;
-      break;
-    case 'F':
-    case 'f':
-      return 15;
-      break;
-    default:
-      return 0;
-      break;
-  }
-}
-
-int GetSerialDecimalArgument() {
-  // SerialReceivePacket[0] is always an 'S'
-  // SerialReceivePacket[1] is a function code
-  // SerialReceivePacket[2..4] can be a decimal argument ranging from 0 to 999
-  int ReturnValue = 0;
-  if (SerialReceivePacket[3] == '\n') {
-    // It's a single digit
-    ReturnValue = HexCharToByte(SerialReceivePacket[2]);
-  } else if (SerialReceivePacket[4] == '\n') {
-    // It's a two digit value
-    ReturnValue = HexCharToByte(SerialReceivePacket[2]) * 10 + HexCharToByte(SerialReceivePacket[3]);
-  } else if (SerialReceivePacket[5] == '\n') {
-    // It's a three digit value
-    ReturnValue = HexCharToByte(SerialReceivePacket[2]) * 100 + HexCharToByte(SerialReceivePacket[3]) * 10 + HexCharToByte(SerialReceivePacket[4]);
-  } else {
-    // ???
-    ReturnValue = 0;
-  }
-  return ReturnValue;
-}
-
-int GetSerialDecimalArgument2() {
-  // ...same as above but decimal argument begins in position 3 rather than 2 (e.g. 'SGI###')
-  int ReturnValue = 0;
-  if (SerialReceivePacket[4] == '\n') {
-    // It's a single digit
-    ReturnValue = HexCharToByte(SerialReceivePacket[3]);
-  } else if (SerialReceivePacket[5] == '\n') {
-    // It's a two digit value
-    ReturnValue = HexCharToByte(SerialReceivePacket[3]) * 10 + HexCharToByte(SerialReceivePacket[4]);
-  } else if (SerialReceivePacket[6] == '\n') {
-    // It's a three digit value
-    ReturnValue = HexCharToByte(SerialReceivePacket[3]) * 100 + HexCharToByte(SerialReceivePacket[4]) * 10 + HexCharToByte(SerialReceivePacket[5]);
-  } else {
-    // ???
-    ReturnValue = 0;
-  }
-  return ReturnValue;
-}
-
 /*
-Serial input protocol
+Serial input protocol to interpret serial input from the Arduino IDE's Serial Monitor:
 Every packet begins with 'S'.
 Every packet ends with '\n'.
 If the initial S is followed by a number ('0'..'7') then the packet is
@@ -298,6 +234,14 @@ Other valid 2nd characters:
 'V' => set the animation step period
 */
 
+// Standard Arduino loop() just keeps running again and again after the setup() is done.
+//  This routine accomplishes two things:
+//    1) updates the physical LEDs in the cube to whatever is in the Cube.Image array.
+//    2) act on any serial input which may have come in from the Arduino IDE.
+//          .... this serial input will only occur during development when the cube
+//          .... is attached by USB cable to the Arduino IDE. When the cube is in
+//          .... normal operation with only power being supplied to it, there won't
+//          .... be any serial activity.
 void loop() {
   // 1) Render stored image to physical LEDs:
   Cube.RenderImageToPhysicalCube();  
@@ -389,4 +333,152 @@ void loop() {
       Cube.SetLEDColor(X, Y, Z, R, G, B);
     } // end else-if(SerialReceivePacket
   } // end if (SerialDataAvailable
+}
+
+// Interrupt service routine for Timer1 - Register A compare match ("TIMER1_COMPA_vect" is predefined for the hardware vector)
+// This routine is called once each millisecond by the hardware timer. It calls the
+// "AnimationStepThrottle()" in the Cube class which in turn sorts out which animation
+// is currently running and calls that animation's "Step" routine to "animate the animation".
+void TimerISR(void) {
+  Cube.AnimationStepThrottle();
+}
+
+// This routine is repeatedly called by the Arduino loop() routine. It detects any
+//  incoming serial traffic and breaks it into packets for the loop() routine to process.
+void ReadIncomingSerial() {
+  static bool SerialReceiveIsOngoing = false;
+  static byte CurrentSerialIndex = 0;
+  byte CurrentReceivedByte;
+
+  while (Serial1.available() > 0 && SerialDataAvailable == false) {
+    CurrentReceivedByte = Serial1.read();
+    if (SerialReceiveIsOngoing == true) {
+      // We're in the process of receiving a packet so place theis received byte into the receive buffer
+      SerialReceivePacket[CurrentSerialIndex] = CurrentReceivedByte;
+      CurrentSerialIndex++;
+      if (CurrentReceivedByte == '\n') {
+        // This was the final character of the serial packet
+        SerialDataAvailable = true;
+        SerialReceiveIsOngoing = false;
+        for (int i = 0; i < SerialPacketMaximumLength; i++) {
+          SerialSendPacket[i] = char(SerialReceivePacket[i]);
+        }
+        Serial1.write(SerialSendPacket);
+      }
+    } else {
+      // We're waiting for the packet start character
+      if ((CurrentReceivedByte == 'S') || (CurrentReceivedByte == 's')) {
+        // This is the start of a new packet
+        SerialReceiveIsOngoing = true;
+        SerialReceivePacket[0] = 'S';
+        CurrentSerialIndex = 1;
+      }
+    }
+  }
+}
+
+
+// Utility routine to convert serial ASCII characters to equivalent binary integer values.
+byte HexCharToByte(char hex) {
+  switch(hex) {
+    case '0':
+      return 0;
+      break;
+    case '1':
+      return 1;
+      break;
+    case '2':
+      return 2;
+      break;
+    case '3':
+      return 3;
+      break;
+    case '4':
+      return 4;
+      break;
+    case '5':
+      return 5;
+      break;
+    case '6':
+      return 6;
+      break;
+    case '7':
+      return 7;
+      break;
+    case '8':
+      return 8;
+      break;
+    case '9':
+      return 9;
+      break;
+    case 'A':
+    case 'a':
+      return 10;
+      break;
+    case 'B':
+    case 'b':
+      return 11;
+      break;
+    case 'C':
+    case 'c':
+      return 12;
+      break;
+    case 'D':
+    case 'd':
+      return 13;
+      break;
+    case 'E':
+    case 'e':
+      return 14;
+      break;
+    case 'F':
+    case 'f':
+      return 15;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
+// Utility routine that returns an integer value following a single-character serial function code
+int GetSerialDecimalArgument() {
+  // SerialReceivePacket[0] is always an 'S'
+  // SerialReceivePacket[1] is a function code
+  // SerialReceivePacket[2..4] can be a decimal argument ranging from 0 to 999
+  int ReturnValue = 0;
+  if (SerialReceivePacket[3] == '\n') {
+    // It's a single digit
+    ReturnValue = HexCharToByte(SerialReceivePacket[2]);
+  } else if (SerialReceivePacket[4] == '\n') {
+    // It's a two digit value
+    ReturnValue = HexCharToByte(SerialReceivePacket[2]) * 10 + HexCharToByte(SerialReceivePacket[3]);
+  } else if (SerialReceivePacket[5] == '\n') {
+    // It's a three digit value
+    ReturnValue = HexCharToByte(SerialReceivePacket[2]) * 100 + HexCharToByte(SerialReceivePacket[3]) * 10 + HexCharToByte(SerialReceivePacket[4]);
+  } else {
+    // ???
+    ReturnValue = 0;
+  }
+  return ReturnValue;
+}
+
+// Utility routine that returns an integer value following a double-character serial function code
+int GetSerialDecimalArgument2() {
+  // ...same as above but decimal argument begins in position 3 rather than 2 (e.g. 'SGI###')
+  int ReturnValue = 0;
+  if (SerialReceivePacket[4] == '\n') {
+    // It's a single digit
+    ReturnValue = HexCharToByte(SerialReceivePacket[3]);
+  } else if (SerialReceivePacket[5] == '\n') {
+    // It's a two digit value
+    ReturnValue = HexCharToByte(SerialReceivePacket[3]) * 10 + HexCharToByte(SerialReceivePacket[4]);
+  } else if (SerialReceivePacket[6] == '\n') {
+    // It's a three digit value
+    ReturnValue = HexCharToByte(SerialReceivePacket[3]) * 100 + HexCharToByte(SerialReceivePacket[4]) * 10 + HexCharToByte(SerialReceivePacket[5]);
+  } else {
+    // ???
+    ReturnValue = 0;
+  }
+  return ReturnValue;
 }
