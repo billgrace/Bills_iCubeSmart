@@ -111,6 +111,12 @@
 // Make square columns rise and fall
 #include "LEDBarGraph.h"        // Animation 32
 
+// A few pillars go around the outside rising and falling in height
+#include "LEDMerryGoRound.h"    // Animation 33
+
+// A very fast single line with trail zipping through the whole cube
+#include "LEDMarathon.h"        // Animation 34
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -124,18 +130,24 @@ HardwareSerial Serial1(RX, TX);
 // Timer
 HardwareTimer Timer1(TIM1);
 
-// Pin definitions for the buttons on the iSmart cube's microprocessor PCB:
-#define StartButton   PC0
-#define NextButton    PC1
-#define CycleButton   PC2
-// Current button states:
-bool StartButtonPressed = false;
-bool NextButtonPressed = false;
-bool CycleButtonPressed = false;
-// Button debounce counters:
-int StartButtonDebounceCounter = 0;
-int NextButtonDebounceCounter = 0;
-int CycleButtonDebounceCounter = 0;
+// Pin definitions for the buttons on the iSmart cube's main PCB:
+#define NextButton        PC1
+#define CycleButton       PC2
+#define StartPauseButton  PC0
+// Button variables:
+int NextButtonReading;
+int CycleButtonReading;
+int StartPauseButtonReading;
+int NextButtonLastReading = HIGH;
+int CycleButtonLastReading = HIGH;
+int StartPauseButtonLastReading = HIGH;
+int NextButtonState;
+int CycleButtonState;
+int StartPauseButtonState;
+unsigned long NextButtonDebounceWindowStartTime;
+unsigned long CycleButtonDebounceWindowStartTime;
+unsigned long StartPauseButtonDebounceWindowStartTime;
+unsigned long DebounceWindow = 100;
 
 // Instantiate each of the classes
 LEDCube Cube;
@@ -173,6 +185,8 @@ LEDSonar Sonar;
 LEDRadar Radar;
 LEDLineFill LineFill;
 LEDBarGraph BarGraph;
+LEDMerryGoRound MerryGoRound;
+LEDMarathon Marathon;
 
 // Serial link to the Arduino IDE
 const byte SerialPacketMaximumLength = 8;
@@ -187,9 +201,9 @@ void setup() {
   pinMode(OnboardLEDGreen, OUTPUT);
 
   // Buttons:
-  pinMode(StartButton, INPUT);
   pinMode(NextButton, INPUT);
   pinMode(CycleButton, INPUT);
+  pinMode(StartPauseButton, INPUT);
 
   // Open the serial port and listen at 38400 bps:
   Serial1.begin(38400);
@@ -333,6 +347,65 @@ void loop() {
       Cube.SetLEDColor(X, Y, Z, R, G, B);
     } // end else-if(SerialReceivePacket
   } // end if (SerialDataAvailable
+
+  // 3) Check for button press
+  // ... Pick up the current state of the buttons
+  NextButtonReading = digitalRead(NextButton);
+  CycleButtonReading = digitalRead(CycleButton);
+  StartPauseButtonReading = digitalRead(StartPauseButton);
+  // ... Reset the debounce window any time a switch state changes
+  if (NextButtonReading != NextButtonLastReading) {
+    NextButtonDebounceWindowStartTime = millis();
+  }
+  if (CycleButtonReading != CycleButtonLastReading) {
+    CycleButtonDebounceWindowStartTime = millis();
+  }
+  if (StartPauseButtonReading != StartPauseButtonLastReading) {
+    StartPauseButtonDebounceWindowStartTime = millis();
+  }
+  // ... If the debounce window time has expired then the switch state is valid
+  if ((millis() - NextButtonDebounceWindowStartTime) > DebounceWindow) {
+    // ... The Next button reading is valid - has it changed from the previous state?
+    if (NextButtonReading != NextButtonState) {
+      // ... The state of the Next button has changed.
+      // .... Save the new state
+      NextButtonState = NextButtonReading;
+      // .... Did it just get pressed or released?
+      if (LOW == NextButtonState) {
+        // Pressed
+        Serial1.println("Next button pressed");
+      } else {
+        // Released
+        Serial1.println("Next button released");
+      }
+    }
+  }
+  // Same procedure for the other two buttons
+  if ((millis() - CycleButtonDebounceWindowStartTime) > DebounceWindow) {
+    if (CycleButtonReading != CycleButtonState) {
+      CycleButtonState = CycleButtonReading;
+      if (LOW == CycleButtonState) {
+        Serial1.println("Cycle button pressed");
+      } else {
+        Serial1.println("Cycle button released");
+      }
+    }
+  }
+  if ((millis() - StartPauseButtonDebounceWindowStartTime) > DebounceWindow) {
+    if (StartPauseButtonReading != StartPauseButtonState) {
+      StartPauseButtonState = StartPauseButtonReading;
+      if (LOW == StartPauseButtonState) {
+        Serial1.println("StartPause button pressed");
+      } else {
+        Serial1.println("StartPause button released");
+      }
+    }
+  }
+
+  // ... Save the current readings for next time through the loop
+  NextButtonLastReading = NextButtonReading;
+  CycleButtonLastReading = CycleButtonReading;
+  StartPauseButtonLastReading = StartPauseButtonReading;
 }
 
 // Interrupt service routine for Timer1 - Register A compare match ("TIMER1_COMPA_vect" is predefined for the hardware vector)

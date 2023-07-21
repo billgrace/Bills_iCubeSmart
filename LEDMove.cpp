@@ -1097,3 +1097,221 @@ int LEDMove::GetCircleMoveY(int Angle) {
 	return CircleMovePositions[Angle][1];
 }
 
+void LEDMove::InitializeMerryGoRoundMove(int EdgeSize) {
+	MerryGoRoundMaxCoordinate = 8 - EdgeSize;
+	MerryGoRoundMoveEdgeSize = EdgeSize;
+	MerryGoRoundCurrentDirection = random(0, 8);
+	switch (MerryGoRoundCurrentDirection) {
+	case 0:
+		// +X @ Y=0
+		MerryGoRoundMoveX = 0;
+		MerryGoRoundMoveY = 0;
+		break;
+	case 1:
+		// +Y @ X=Max
+		MerryGoRoundMoveX = MerryGoRoundMaxCoordinate;
+		MerryGoRoundMoveY = 0;
+		break;
+	case 2:
+		// -X @ Y=Max
+		MerryGoRoundMoveX = MerryGoRoundMaxCoordinate;
+		MerryGoRoundMoveY = MerryGoRoundMaxCoordinate;
+		break;
+	case 3:
+		// -Y @ X=0
+		MerryGoRoundMoveX = 0;
+		MerryGoRoundMoveY = MerryGoRoundMaxCoordinate;
+		break;
+	case 4:
+		// -X @ Y=0
+		MerryGoRoundMoveX = MerryGoRoundMaxCoordinate;
+		MerryGoRoundMoveY = 0;
+		break;
+	case 5:
+		// +Y @ X=0
+		MerryGoRoundMoveX = 0;
+		MerryGoRoundMoveY = 0;
+		break;
+	case 6:
+		// +X @ Y=Max
+		MerryGoRoundMoveX = 0;
+		MerryGoRoundMoveY = MerryGoRoundMaxCoordinate;
+		break;
+	case 7:
+		// -Y @ X=Max
+		MerryGoRoundMoveX = MerryGoRoundMaxCoordinate;
+		MerryGoRoundMoveY = MerryGoRoundMaxCoordinate;
+		break;
+	}
+}
+
+void LEDMove::StepMerryGoRoundMove() {
+	switch (MerryGoRoundCurrentDirection) {
+	case 0:
+		// +X @ Y=0
+		// Tentatively move right
+		MerryGoRoundMoveX++;
+		if (MerryGoRoundMoveX > MerryGoRoundMaxCoordinate) {
+			// We went too far => it's time to change direction
+			MerryGoRoundCurrentDirection = 1;
+			// Undo the tentative move to the right
+			MerryGoRoundMoveX--;
+			// Move in the new direction
+			MerryGoRoundMoveY++;
+		}
+		break;
+	case 1:
+		// +Y @ X=Max
+		MerryGoRoundMoveY++;
+		if (MerryGoRoundMoveY > MerryGoRoundMaxCoordinate) {
+			MerryGoRoundCurrentDirection = 2;
+			MerryGoRoundMoveX--;
+			MerryGoRoundMoveY--;
+		}
+		break;
+	case 2:
+		// -X @ Y=Max
+		MerryGoRoundMoveX--;
+		if (MerryGoRoundMoveX < 0) {
+			MerryGoRoundCurrentDirection = 3;
+			MerryGoRoundMoveX++;
+			MerryGoRoundMoveY--;
+		}
+		break;
+	case 3:
+		// -Y @ X=0
+		MerryGoRoundMoveY--;
+		if (MerryGoRoundMoveY < 0) {
+			MerryGoRoundCurrentDirection = 0;
+			MerryGoRoundMoveX++;
+			MerryGoRoundMoveY++;
+		}
+		break;
+	case 4:
+		// -X @ Y=0
+		MerryGoRoundMoveX--;
+		if (MerryGoRoundMoveX < 0) {
+			MerryGoRoundCurrentDirection = 5;
+			MerryGoRoundMoveX++;
+			MerryGoRoundMoveY++;
+		}
+		break;
+	case 5:
+		// +Y @ X=0
+		MerryGoRoundMoveY++;
+		if (MerryGoRoundMoveY > MerryGoRoundMaxCoordinate) {
+			MerryGoRoundCurrentDirection = 6;
+			MerryGoRoundMoveX++;
+			MerryGoRoundMoveY--;
+		}
+		break;
+	case 6:
+		// +X @ Y=Max
+		MerryGoRoundMoveX++;
+		if (MerryGoRoundMoveX > MerryGoRoundMaxCoordinate) {
+			MerryGoRoundCurrentDirection = 7;
+			MerryGoRoundMoveX--;
+			MerryGoRoundMoveY--;
+		}
+		break;
+	case 7:
+		// -Y @ X=Max
+		MerryGoRoundMoveY--;
+		if (MerryGoRoundMoveY < 0) {
+			MerryGoRoundCurrentDirection = 4;
+			MerryGoRoundMoveX--;
+			MerryGoRoundMoveY++;
+		}
+		break;
+	}
+}
+
+int LEDMove::GetMerryGoRoundMoveX(){
+	return MerryGoRoundMoveX;
+}
+
+int LEDMove::GetMerryGoRoundMoveY() {
+	return MerryGoRoundMoveY;
+}
+
+void LEDMove::InitializeMarathonMove() {
+	MarathonMoveX = 0;
+	MarathonMoveY = 0;
+	MarathonMoveZ = 0;
+	MarathonMoveSegment = 0;
+	MarathonMoveVerticalDirection = 1;
+}
+
+void LEDMove::StepMarathonMove() {
+	switch (MarathonMoveSegment) {
+	case 0:
+		// Moving +X at Y = 0
+		MarathonMoveX++;
+		if (MarathonMoveX > 7) {
+			MarathonMoveX = 7;
+			MarathonMoveY = 1;
+			MarathonMoveSegment = 1;
+		}
+		break;
+	case 1:
+		// Moving +Y at X = 7
+		MarathonMoveY++;
+		if (MarathonMoveY > 7) {
+			MarathonMoveY = 7;
+			MarathonMoveX = 6;
+			MarathonMoveSegment = 2;
+		}
+		break;
+	case 2:
+		// Moving -X at Y = 7
+		MarathonMoveX--;
+		if (MarathonMoveX < 0) {
+			MarathonMoveX = 0;
+			MarathonMoveY = 6;
+			MarathonMoveSegment = 3;
+		}
+		break;
+	case 3:
+		// Moving -Y at X = 0
+		MarathonMoveY--;
+		if (MarathonMoveY < 0) {
+			MarathonMoveY = 0;
+			MarathonMoveX = 1;
+			MarathonMoveSegment = 0;
+			switch (MarathonMoveVerticalDirection) {
+			case 1:
+				// Presently going up
+				MarathonMoveZ++;
+				if (MarathonMoveZ > 7) {
+					// Went too far, head back down
+					MarathonMoveZ = 6;
+					MarathonMoveVerticalDirection = -1;
+				}
+				break;
+			case -1:
+				// Presently going down
+				MarathonMoveZ--;
+				if (MarathonMoveZ < 0) {
+					// Went too far, head back up
+					MarathonMoveZ = 1;
+					MarathonMoveVerticalDirection = 1;
+				}
+				break;
+			}
+		}
+		break;
+	}
+}
+
+
+int LEDMove::GetMarathonMoveX() {
+	return MarathonMoveX;
+}
+
+int LEDMove::GetMarathonMoveY() {
+	return MarathonMoveY;
+}
+
+int LEDMove::GetMarathonMoveZ() {
+	return MarathonMoveZ;
+}

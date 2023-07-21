@@ -222,6 +222,45 @@ There are 12 points that *kind of* make such a circle:
 10		1, 1
 11		3, 0
 
+
+#####################################################
+#####################################################
+#############   MERRYGOROUND MOVE   #################
+#####################################################
+#####################################################
+Move around the outside of the bottom layer.
+The motion supported is that of a single point at
+the "front left" (smallest X & Y) of a variable-size
+square.
+The minimum possible coordinate is always 0.
+The maximum possible coordinate is 8 - the edge size of the square
+MerryGoRoundCurrentDirection:
+0: X=0->max, Y=0
+1: X=max, Y=0->max
+2: X=max->0, Y=max
+3: X=0, Y=max->0
+4: X=max->0, Y=0
+5: X=0, Y=0->max
+6: X=0->max, Y=max
+7: X=max, Y=max->0
+
+
+#####################################################
+#####################################################
+##############   MARATHON MOVE   ####################
+#####################################################
+#####################################################
+Move around the outer X/Y edges at Z = 0. Then increment
+Z and do it again. Repeat till Z = 7 then keep going
+with Z decrementing.
+It's up to the calling routine to handle any variations
+in axis assignments and polarities.
+MarathonMoveSegment:
+0: X moves from 0 to 7 with Y at 0
+1: Y moves from 0 to 7 with X at 7
+2: X moves from 7 to 0 with Y at 7
+3: Y moves from 7 to 0 with X at 0
+
 */
 #define NumberOfSpiralPatterns 4
 class LEDMove {
@@ -368,6 +407,16 @@ private:
 	int CircleMovePositions[12][2] = {
 		{4, 0}, {6, 1}, {7, 3}, {7, 4}, {6, 6}, {4, 7}, {3, 7}, {1, 6}, {0, 4}, {0, 3}, {1, 1}, {3, 0}
 	};
+	int MerryGoRoundMoveEdgeSize;
+	int MerryGoRoundMaxCoordinate;
+	int MerryGoRoundCurrentDirection;
+	int MerryGoRoundMoveX;
+	int MerryGoRoundMoveY;
+	int MarathonMoveX;
+	int MarathonMoveY;
+	int MarathonMoveZ;
+	int MarathonMoveSegment;
+	int MarathonMoveVerticalDirection;
 public:
 	LEDMove();
 	void InitializeCubeMove(int Radius, int Mode, int SegmentCountTarget);
@@ -405,5 +454,14 @@ public:
 	int GetRotorMoveY(int Angle, int BarPoint);
 	int GetCircleMoveX(int Angle);
 	int GetCircleMoveY(int Angle);
+	void InitializeMerryGoRoundMove(int EdgeSize);
+	void StepMerryGoRoundMove();
+	int GetMerryGoRoundMoveX();
+	int GetMerryGoRoundMoveY();
+	void InitializeMarathonMove();
+	void StepMarathonMove();
+	int GetMarathonMoveX();
+	int GetMarathonMoveY();
+	int GetMarathonMoveZ();
 };
 #endif

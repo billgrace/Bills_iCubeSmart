@@ -44,6 +44,8 @@ This class has two main purposes:
 #include "LEDRadar.h"
 #include "LEDLineFill.h"
 #include "LEDBarGraph.h"
+#include "LEDMerryGoRound.h"
+#include "LEDMarathon.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -80,6 +82,8 @@ extern LEDSonar Sonar;
 extern LEDRadar Radar;
 extern LEDLineFill LineFill;
 extern LEDBarGraph BarGraph;
+extern LEDMerryGoRound MerryGoRound;
+extern LEDMarathon Marathon;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -296,6 +300,12 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 32:
         BarGraph.StepBarGraph();
+        break;
+      case 33:
+        MerryGoRound.StepMerryGoRound();
+        break;
+      case 34:
+        Marathon.StepMarathon();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -514,6 +524,16 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = BarGraph.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     BarGraph.StartBarGraph();
+    break;
+  case 33:
+    SuggestedAnimationDuration = MerryGoRound.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    MerryGoRound.StartMerryGoRound();
+    break;
+  case 34:
+    SuggestedAnimationDuration = Marathon.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Marathon.StartMarathon();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");
@@ -1217,7 +1237,7 @@ void LEDCube::RenderImageToPhysicalCube() {
   for (int ColorIntensityPassCounter = 0; ColorIntensityPassCounter < ColorIntensityPassCount; ColorIntensityPassCounter++) {
     int CurrentColorIntensityIndex = ColorIntensityIndexSelector[ColorIntensityPassCounter];
     // Loop through each Z-Axis level:
-    for (int z = 0; z < Height; z++) {
+    for (int z = 0; z < CubeHeight; z++) {
       ClearCurrentLayer();
       SwitchToLayer(z);
 

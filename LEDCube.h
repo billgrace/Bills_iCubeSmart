@@ -28,7 +28,7 @@
 
 // Height of cube (Z-Axis):
 //const int Height = 8;
-#define Height 8
+#define CubeHeight 8
 
 // Number of rows left-to-right coordinate positions (X-Axis):
 //const int XAxisPositions = 8;
@@ -60,7 +60,7 @@
 
 // "Image" is a three dimensional array storing the current colors and intensities of all the LEDs in the 8x8x8 cube.
 // The first dimension ("ColorDepth") represents the brightness of a particular color in a particular LED.
-// The second dimension ("Height") represents the 8 vertical levels of the cube.
+// The second dimension ("CubeHeight") represents the 8 vertical levels of the cube.
 // The third dimension ("ShiftRegisterBytes") is dictated by the PCB wiring of the 12 shift registers (16 bits each) and
 //  their connections to the vertical wiring driving the cathodes of the LEDs. Considering a single 24-byte vector
 //  representing a given color depth intensity bit and a given height level, the bytes correspond to:
@@ -172,12 +172,12 @@ class LEDCube {
     int TestAlternateIndex = 0;
     int CurrentAnimationIndex = 0;
     int LastAnimationIndex = 0;
-    int NumberOfAnimationsImplemented = 33;
+    int NumberOfAnimationsImplemented = 35;
     int RecentAnimationIndexes[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     byte LEDIsOn[8][8][8];
     byte ColorIntensityIndexSelector[ColorIntensityPassCount] = {0, 2, 1, 2, 1, 2, 2};
-    byte Image[ColorDepth][Height][ShiftRegisterBytes];
-    byte RainbowImage[ColorDepth][Height][ShiftRegisterBytes] =
+    byte Image[ColorDepth][CubeHeight][ShiftRegisterBytes];
+    byte RainbowImage[ColorDepth][CubeHeight][ShiftRegisterBytes] =
       {{
       // G  G  B  B  R  R  G  G  B  B  R  R  G  G  B  B  R  R  G  G  B  B  R  R
       {0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255}, // Red = all Red

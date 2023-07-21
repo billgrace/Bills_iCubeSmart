@@ -50,10 +50,9 @@ void LEDBarGraph::StartBarGraph() {
 			Index++;
 		}
 	}
-	CurrentRow = random(0, 2);
-	CurrentColumn = random(0, 2);
-	// Mode = random(0, 4);
-	Mode = 0;
+	CurrentRow = random(0, BarsPerAxis);
+	CurrentColumn = random(0, BarsPerAxis);
+	Mode = random(0, 4);
 	MinTopLevel = random(1, 4);
 	MoveOnCounter = 0;
 	// Set all bars to inactive
@@ -78,18 +77,16 @@ void LEDBarGraph::StartBarGraph() {
 	case 2:
 		// One row of bars moving - pick a row and start all columns in that row
 		MoveOnTarget = random(20, 40);
-		Row = random(0, BarsPerAxis);
 		for (Column = 0; Column < BarsPerAxis; Column++) {
-			Index = Row * BarsPerAxis + Column;
+			Index = CurrentRow * BarsPerAxis + Column;
 			StartBar(Index);
 		}
 		break;
 	case 3:
 		// One column of bars moving - pick a column and start all rows in that column
 		MoveOnTarget = random(20, 40);
-		Column = random(0, BarsPerAxis);
 		for (Row = 0; Row < BarsPerAxis; Row++) {
-			Index = Row * BarsPerAxis + Column;
+			Index = Row * BarsPerAxis + CurrentColumn;
 			StartBar(Index);
 		}
 		break;
@@ -97,9 +94,46 @@ void LEDBarGraph::StartBarGraph() {
 }
 
 void LEDBarGraph::StepBarGraph() {
+	int i;
+	int r;
+	int c;
 	StepCounter++;
 	if (StepCounter >= StepTarget) {
 		StartBarGraph();
+	}
+	MoveOnCounter++;
+	if (MoveOnCounter >= MoveOnTarget) {
+		MoveOnCounter = 0;
+		if (2 == Mode) {
+			// Move to a different row
+			// ... turn off the current row
+			for (c = 0; c < BarsPerAxis; c++) {
+				i = CurrentRow * BarsPerAxis + c;
+				Bar[i][7] = 0;
+			}
+			// ... pick a new row
+			CurrentRow = Cube.RandomButDifferent(CurrentRow, 0, BarsPerAxis);
+			// ... start up the new row
+			for (c = 0; c < BarsPerAxis; c++) {
+				i = CurrentRow * BarsPerAxis + c;
+				StartBar(i);
+			}
+		}
+		if (3 == Mode) {
+			// Move to a different column
+			// ... turn off the current column
+			for (r = 0; r < BarsPerAxis; r++) {
+				i = r * BarsPerAxis + CurrentColumn;
+				Bar[i][7] = 0;
+			}
+			// ... pick a new column
+			CurrentColumn = Cube.RandomButDifferent(CurrentColumn, 0, BarsPerAxis);
+			// ... start up the new column
+			for (r = 0; r < BarsPerAxis; r++) {
+				i = r * BarsPerAxis + CurrentColumn;
+				StartBar(i);
+			}
+		}
 	}
 	for (int b = 0; b < BarsInUse; b++) {
 		if (Bar[b][7] > 0) {
@@ -156,7 +190,7 @@ void LEDBarGraph::MoveBar(int Index) {
 				// We're in the one-bar-at-a-time mode so turn off this bar and
 				// then start up another one.
 				Bar[Index][7] = 0;
-				StartBar(random(0, BarsInUse));
+				StartBar(Cube.RandomButDifferent(Index, 0, BarsInUse));
 			} else {
 				// We're in one of the multi-bar modes so just restart this one
 				StartBar(Index);
