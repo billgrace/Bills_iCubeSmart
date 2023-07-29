@@ -22,7 +22,7 @@ void LEDDash::StartDash() {
 	Cube.IncrementAnimationDurationCycleCount();
 	StepCounter = 0;
 	// Initialize elements to "off"
-	for (int i = 0; i < TrailLength; i++) {
+	for (int i = 0; i < DashTrailLength; i++) {
 		Trail[i][9] = 0;
 	}
 	// Pick a width
@@ -47,7 +47,7 @@ void LEDDash::StartDash() {
 
 void LEDDash::StepDash() {
 	// Erase previous tail position
-	DrawTrailElement(TrailLength-1, 0, 0, 0);
+	DrawTrailElement(DashTrailLength-1, 0, 0, 0);
 	// Determine next lead position
 	StepCounter++;
 	if (Move.AtEndOfCurrentCubeMoveSegment()) {
@@ -61,7 +61,7 @@ void LEDDash::StepDash() {
 		Move.AdvanceToNextCubeMovePosition();
 	}
 	// Update all the trailing position, direction and initialized flag bytes
-	for (int i = TrailLength - 1; i > 0; i--) {
+	for (int i = DashTrailLength - 1; i > 0; i--) {
 		Trail[i][0] = Trail[i-1][0];
 		Trail[i][1] = Trail[i-1][1];
 		Trail[i][2] = Trail[i-1][2];
@@ -75,7 +75,7 @@ void LEDDash::StepDash() {
 	Trail[0][1] = Move.GetCurrentCubeMoveY();
 	Trail[0][2] = Move.GetCurrentCubeMoveZ();
 	// Vary the color of the lead element
-	if ((StepCounter % StepsPerColorChange) == 2) {
+	if ((StepCounter % DashStepsPerColorChange) == 2) {
 		LeadRed = random(5, 8);
 		LeadGreen = random(5, 8);
 		LeadBlue = random(5, 8);
@@ -94,18 +94,18 @@ void LEDDash::StepDash() {
 	int Red = LeadRed;
 	int Green = LeadGreen;
 	int Blue = LeadBlue;
-	for (int i = 1; i < TrailLength; i++) {
+	for (int i = 1; i < DashTrailLength; i++) {
 		Trail[i][3] = Red;
 		Trail[i][4] = Green;
 		Trail[i][5] = Blue;
-		if ((i % StepsPerDim) == 0) {
+		if ((i % DashStepsPerDim) == 0) {
 			Red = max(0, Red - 1);
 			Green = max(0, Green - 1);
 			Blue = max(0, Blue - 1);
 		}
 	}
 	// Draw all the new elements
-	for (int i = 0; i < TrailLength; i++) {
+	for (int i = 0; i < DashTrailLength; i++) {
 		DrawTrailElement(i, Trail[i][3], Trail[i][4], Trail[i][5]);
 	}
 }

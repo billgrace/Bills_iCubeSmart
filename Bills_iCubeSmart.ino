@@ -117,6 +117,33 @@
 // A very fast single line with trail zipping through the whole cube
 #include "LEDMarathon.h"        // Animation 34
 
+// Run PointToLine (#1) and Pong (#16) at the same time
+#include "LEDCombo3.h"          // Animation 35
+
+// Run Dash (#12) and Marathon (#34) at the same time
+#include "LEDCombo4.h"          // Animation 36
+
+// Run FireworkRocket (#4) and Sonar (#29) at the same time
+#include "LEDCombo5.h"          // Animation 37
+
+// Run MerryGoRound (#33) and Radar (#30) at the same time
+#include "LEDCombo6.h"          // Animation 38
+
+// Run Spiral (#13) and Tide (#5) at the same time
+#include "LEDCombo7.h"          // Animation 39
+
+// Light up a corner and expand it to a random extent
+#include "LEDCorner.h"          // Animation 40
+
+// Loop a line around like a jump rope
+#include "LEDJumpRope.h"        // Animation 41
+
+// Put up a hoop and shoot a ball through it
+#include "LEDBasketBall.h"      // Animation 42
+
+// Like "LineFill" but loops instead of lines
+#include "LEDLoopFill.h"        // Animation 43
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -187,6 +214,15 @@ LEDLineFill LineFill;
 LEDBarGraph BarGraph;
 LEDMerryGoRound MerryGoRound;
 LEDMarathon Marathon;
+LEDCombo3 Combo3;
+LEDCombo4 Combo4;
+LEDCombo5 Combo5;
+LEDCombo6 Combo6;
+LEDCombo7 Combo7;
+LEDCorner Corner;
+LEDJumpRope JumpRope;
+LEDBasketBall BasketBall;
+LEDLoopFill LoopFill;
 
 // Serial link to the Arduino IDE
 const byte SerialPacketMaximumLength = 8;

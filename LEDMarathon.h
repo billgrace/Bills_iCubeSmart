@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 #define MarathonTrailLength 10
-#define StepsPerDim 2
+#define MarathonStepsPerDim 2
 
 class LEDMarathon {
 private:

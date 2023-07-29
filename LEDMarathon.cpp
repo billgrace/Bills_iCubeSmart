@@ -135,7 +135,7 @@ void LEDMarathon::StepMarathon() {
 	int Green = LeadGreen;
 	int Blue = LeadBlue;
 	for (Index = 1; Index < MarathonTrailLength; Index++) {
-		if ((Index % StepsPerDim) == 1) {
+		if ((Index % MarathonStepsPerDim) == 1) {
 			Red = max(0, Red - 1);
 			Green = max(0, Green - 1);
 			Blue = max(0, Blue - 1);

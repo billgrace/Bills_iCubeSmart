@@ -3,9 +3,9 @@
 #define LEDDash_h
 #include <Arduino.h>
 
-#define TrailLength 20
-#define StepsPerDim 3
-#define StepsPerColorChange 50
+#define DashTrailLength 20
+#define DashStepsPerDim 3
+#define DashStepsPerColorChange 50
 
 class LEDDash {
 private:
@@ -21,7 +21,7 @@ private:
 	// 7 = DeltaY
 	// 8 = DeltaZ
 	// 9 = Initialized
-	byte Trail[TrailLength][10];
+	byte Trail[DashTrailLength][10];
 	int NumberOfStepsToPerform;
 	int StepCounter;
 	// Direction:

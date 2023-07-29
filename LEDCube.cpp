@@ -46,6 +46,15 @@ This class has two main purposes:
 #include "LEDBarGraph.h"
 #include "LEDMerryGoRound.h"
 #include "LEDMarathon.h"
+#include "LEDCombo3.h"
+#include "LEDCombo4.h"
+#include "LEDCombo5.h"
+#include "LEDCombo6.h"
+#include "LEDCombo7.h"
+#include "LEDCorner.h"
+#include "LEDJumpRope.h"
+#include "LEDBasketBall.h"
+#include "LEDLoopFill.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -84,6 +93,15 @@ extern LEDLineFill LineFill;
 extern LEDBarGraph BarGraph;
 extern LEDMerryGoRound MerryGoRound;
 extern LEDMarathon Marathon;
+extern LEDCombo3 Combo3;
+extern LEDCombo4 Combo4;
+extern LEDCombo5 Combo5;
+extern LEDCombo6 Combo6;
+extern LEDCombo7 Combo7;
+extern LEDCorner Corner;
+extern LEDJumpRope JumpRope;
+extern LEDBasketBall BasketBall;
+extern LEDLoopFill LoopFill;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -306,6 +324,33 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 34:
         Marathon.StepMarathon();
+        break;
+      case 35:
+        Combo3.StepCombo3();
+        break;
+      case 36:
+        Combo4.StepCombo4();
+        break;
+      case 37:
+        Combo5.StepCombo5();
+        break;
+      case 38:
+        Combo6.StepCombo6();
+        break;
+      case 39:
+        Combo7.StepCombo7();
+        break;
+      case 40:
+        Corner.StepCorner();
+        break;
+      case 41:
+        JumpRope.StepJumpRope();
+        break;
+      case 42:
+        BasketBall.StepBasketBall();
+        break;
+      case 43:
+        LoopFill.StepLoopFill();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -534,6 +579,51 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Marathon.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Marathon.StartMarathon();
+    break;
+  case 35:
+    SuggestedAnimationDuration = Combo3.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo3.StartCombo3();
+    break;
+  case 36:
+    SuggestedAnimationDuration = Combo4.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo4.StartCombo4();
+    break;
+  case 37:
+    SuggestedAnimationDuration = Combo5.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo5.StartCombo5();
+    break;
+  case 38:
+    SuggestedAnimationDuration = Combo6.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo6.StartCombo6();
+    break;
+  case 39:
+    SuggestedAnimationDuration = Combo7.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo7.StartCombo7();
+    break;
+  case 40:
+    SuggestedAnimationDuration = Corner.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Corner.StartCorner();
+    break;
+  case 41:
+    SuggestedAnimationDuration = JumpRope.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    JumpRope.StartJumpRope();
+    break;
+  case 42:
+    SuggestedAnimationDuration = BasketBall.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    BasketBall.StartBasketBall();
+    break;
+  case 43:
+    SuggestedAnimationDuration = LoopFill.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    LoopFill.StartLoopFill();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");
