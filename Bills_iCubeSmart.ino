@@ -144,6 +144,23 @@
 // Like "LineFill" but loops instead of lines
 #include "LEDLoopFill.h"        // Animation 43
 
+// Drop bright lightning strikes from a gray sky
+#include "LEDLightning.h"       // Animation 44
+
+// Send a single LED flying randomly around the whole cube and have another chase it
+#include "LEDChase.h"           // Animation 45
+
+// Spread a rainbow from faces and corners
+#include "LEDRainbow.h"         // Animation 46
+
+// Combo8: Lightning(44) & Tide(5)
+#include "LEDCombo8.h"          // Animation 47
+
+// Combo9: Binary(24) & Shape(25)
+#include "LEDCombo9.h"          // Animation 48
+
+// Send randomly colored, located & oriented 2x2x8 columns growing throught the cube
+#include "LEDColumns.h"         // Animation 49
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -223,6 +240,13 @@ LEDCorner Corner;
 LEDJumpRope JumpRope;
 LEDBasketBall BasketBall;
 LEDLoopFill LoopFill;
+LEDLightning Lightning;
+LEDChase Chase;
+LEDRainbow Rainbow;
+LEDCombo8 Combo8;
+LEDCombo9 Combo9;
+LEDColumns Columns;
+
 
 // Serial link to the Arduino IDE
 const byte SerialPacketMaximumLength = 8;

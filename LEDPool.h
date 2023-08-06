@@ -26,7 +26,8 @@ private:
 	int StepCounter;
 	int StepTarget;
 	int DrippingCorner;
-	int PoolHeight;
+	int PoolHeight[4];
+	int PoolHeightChangeCorner;
 	int PoolHeightCounter;
 	int PoolHeightTarget;
 	int ArcLength;

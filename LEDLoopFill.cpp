@@ -21,9 +21,9 @@ void LEDLoopFill::StartLoopFill() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
 	Cube.SetAnimationStepSpeedPeriodTo(random(20, 50));
-	LoopCounter = 0;
-	LoopTarget = random(40, 60);
-	StartALoop();
+	FaceCounter = 0;
+	FaceTarget = random(3, 7);
+	StartAFace();
 }
 
 void LEDLoopFill::StepLoopFill() {
@@ -209,6 +209,12 @@ void LEDLoopFill::StartALoop() {
 }
 
 void LEDLoopFill::StartAFace() {
+	FaceCounter++;
+	if (FaceCounter >= FaceTarget) {
+		StartLoopFill();
+	}
+	LoopCounter = 0;
+	LoopTarget = random(10, 30);
 	Cube.ClearImage();
 	LoopCounter = 0;
 	Face = random(0, 6);

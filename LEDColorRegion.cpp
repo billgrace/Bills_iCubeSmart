@@ -26,7 +26,7 @@ void LEDColorRegion::StartColorRegion() {
 	CurrentDeltaY = Cube.RandomDeltaPosition() * 2;
 	CurrentDeltaZ = Cube.RandomDeltaPosition() * 2;
 	OverallStepCounter = 0;
-	OverallStepTarget = random(1000, 1500);
+	OverallStepTarget = random(300, 500);
 	StartNewCenter();
 	StartNewColor();
 }

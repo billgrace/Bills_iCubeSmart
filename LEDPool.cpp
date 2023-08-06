@@ -37,9 +37,13 @@ void LEDPool::StartPool() {
 	Colors[3][2] = Cube.RandomColor();
 	StepCounter = 0;
 	StepTarget = random(100, 200);
-	PoolHeight = random(3, MaxPoolHeight + 1);
+	PoolHeight[0] = random(3, MaxPoolHeight + 1);
+	PoolHeight[1] = PoolHeight[0];
+	PoolHeight[2] = PoolHeight[0];
+	PoolHeight[3] = PoolHeight[0];
+	PoolHeightChangeCorner = 0;
 	PoolHeightCounter = 0;
-	PoolHeightTarget = StepTarget / PoolHeight;
+	PoolHeightTarget = StepTarget / PoolHeight[0] / 4;
 	DrawCornerPool(0);
 	DrawCornerPool(1);
 	DrawCornerPool(2);
@@ -53,16 +57,17 @@ void LEDPool::StepPool() {
 	if (StepCounter >= StepTarget) {
 		StartPool();
 	}
+	// Erase present arcs
 	DrawArcs(false);
+	// Time to reduce the height of a corner?
 	PoolHeightCounter++;
-	if ((PoolHeightCounter >= PoolHeightTarget) && (PoolHeight > 1)) {
+	if ((PoolHeightCounter >= PoolHeightTarget) && (PoolHeight[PoolHeightChangeCorner] > 1)) {
 		PoolHeightCounter = 0;
-		PoolHeight--;
-		DrawCornerPool(0);
-		DrawCornerPool(1);
-		DrawCornerPool(2);
-		DrawCornerPool(3);
+		PoolHeight[PoolHeightChangeCorner]--;
+		DrawCornerPool(PoolHeightChangeCorner);
+		PoolHeightChangeCorner = Cube.NextIndex(PoolHeightChangeCorner, 4);
 	}
+	// Update the arc of drops
 	DrippingCorner = Cube.NextIndex(DrippingCorner, 4);
 	if (ArcLength < 14) ArcLength++;
 	DrawArcs(true);
@@ -112,7 +117,7 @@ void LEDPool::DrawCornerPool(int Corner) {
 	for (int Z = 0; Z < MaxPoolHeight; Z++) {
 		for (int X = MinX; X <= MaxX; X++) {
 			for (int Y = MinY; Y <= MaxY; Y++) {
-				if (Z >= PoolHeight) {
+				if (Z >= PoolHeight[Corner]) {
 					Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
 				} else {
 					Cube.SetLEDColor(X, Y, Z, Colors[Corner][0], Colors[Corner][1], Colors[Corner][2]);

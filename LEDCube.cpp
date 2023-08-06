@@ -55,6 +55,12 @@ This class has two main purposes:
 #include "LEDJumpRope.h"
 #include "LEDBasketBall.h"
 #include "LEDLoopFill.h"
+#include "LEDLightning.h"
+#include "LEDChase.h"
+#include "LEDRainbow.h"
+#include "LEDCombo8.h"
+#include "LEDCombo9.h"
+#include "LEDColumns.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -102,6 +108,12 @@ extern LEDCorner Corner;
 extern LEDJumpRope JumpRope;
 extern LEDBasketBall BasketBall;
 extern LEDLoopFill LoopFill;
+extern LEDLightning Lightning;
+extern LEDChase Chase;
+extern LEDRainbow Rainbow;
+extern LEDCombo8 Combo8;
+extern LEDCombo9 Combo9;
+extern LEDColumns Columns;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -351,6 +363,24 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 43:
         LoopFill.StepLoopFill();
+        break;
+      case 44:
+        Lightning.StepLightning();
+        break;
+      case 45:
+        Chase.StepChase();
+        break;
+      case 46:
+        Rainbow.StepRainbow();
+        break;
+      case 47:
+        Combo8.StepCombo8();
+        break;
+      case 48:
+        Combo9.StepCombo9();
+        break;
+      case 49:
+        Columns.StepColumns();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -624,6 +654,36 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = LoopFill.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     LoopFill.StartLoopFill();
+    break;
+  case 44:
+    SuggestedAnimationDuration = Lightning.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Lightning.StartLightning();
+    break;
+  case 45:
+    SuggestedAnimationDuration = Chase.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Chase.StartChase();
+    break;
+  case 46:
+    SuggestedAnimationDuration = Rainbow.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Rainbow.StartRainbow();
+    break;
+  case 47:
+    SuggestedAnimationDuration = Combo8.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo8.StartCombo8();
+    break;
+  case 48:
+    SuggestedAnimationDuration = Combo9.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo9.StartCombo9();
+    break;
+  case 49:
+    SuggestedAnimationDuration = Columns.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Columns.StartColumns();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

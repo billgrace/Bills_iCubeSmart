@@ -20,7 +20,7 @@ int LEDCorner::SuggestedNumberOfAnimationCycles() {
 void LEDCorner::StartCorner() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
-	Cube.SetAnimationStepSpeedPeriodTo(random(30, 100));
+	Cube.SetAnimationStepSpeedPeriodTo(random(80, 130));
 	StepCounter = 0;
 	StepTarget = random(500, 1000);
 	NumberOfCorners = random(2, 9);
@@ -141,7 +141,7 @@ void LEDCorner::StartACorner() {
 		Corner[NewCornerIndex][4] = 1; // Always start with a single LED in the corner
 		Corner[NewCornerIndex][5] = random(15, 30); // How many steps at each size
 		Corner[NewCornerIndex][6] = 1; // Already 1 done since we'll paint the start in this routine
-		Corner[NewCornerIndex][7] = random(2, 5); // Final size
+		Corner[NewCornerIndex][7] = random(2, 4); // Final size
 		Corner[NewCornerIndex][8] = random(30, 100); // How many steps to persist at the final size
 		Corner[NewCornerIndex][9] = 0; // Count of how many steps at the final size
 		DrawCorner(NewCornerIndex, 1, Corner[NewCornerIndex][1], Corner[NewCornerIndex][2], Corner[NewCornerIndex][3]);
