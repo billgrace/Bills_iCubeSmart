@@ -22,6 +22,7 @@ void LEDColumns::StartColumns() {
 	Cube.IncrementAnimationDurationCycleCount();
 	ColumnCounter = 0;
 	ColumnTarget = random(70, 115);
+	Mode = random(0, 3);
 	StartAColumn();
 }
 
@@ -90,9 +91,42 @@ void LEDColumns::StartAColumn() {
 	} else {
 		Direction = random(0, 6);
 		Length = 0;
-		Red = Cube.RandomColor();
-		Green = Cube.RandomColor();
-		Blue = Cube.RandomColor();
+		switch(Mode) {
+		case 0:
+			// always light up more columns
+			Red = Cube.RandomColor();
+			Green = Cube.RandomColor();
+			Blue = Cube.RandomColor();
+			break;
+		case 1:
+			// alternate between lighting up and erasing columns
+			if ((ColumnCounter % 2) == 1) {
+				// erase
+				Red = 0;
+				Green = 0;
+				Blue = 0;
+			} else {
+				// light up
+				Red = Cube.RandomColor();
+				Green = Cube.RandomColor();
+				Blue = Cube.RandomColor();
+			}
+			break;
+		case 2:
+			// light up columns until animation is half done then erase them
+			if (ColumnCounter > (ColumnTarget / 2)) {
+				// erase
+				Red = 0;
+				Green = 0;
+				Blue = 0;
+			} else {
+				// light up
+				Red = Cube.RandomColor();
+				Green = Cube.RandomColor();
+				Blue = Cube.RandomColor();
+			}
+			break;
+		}
 		switch (Direction) {
 		case 0:
 			// Grow in X+ direction

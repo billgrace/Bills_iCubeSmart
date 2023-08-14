@@ -22,7 +22,7 @@ void LEDCorner::StartCorner() {
 	Cube.IncrementAnimationDurationCycleCount();
 	Cube.SetAnimationStepSpeedPeriodTo(random(80, 130));
 	StepCounter = 0;
-	StepTarget = random(500, 1000);
+	StepTarget = random(100, 300);
 	NumberOfCorners = random(2, 9);
 	StartTarget = 50 - 2 * NumberOfCorners;
 	StartCounter = 0;

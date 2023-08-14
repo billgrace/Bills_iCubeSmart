@@ -22,7 +22,7 @@ void LEDRainbow::StartRainbow() {
 	Cube.IncrementAnimationDurationCycleCount();
 	Cube.SetAnimationStepSpeedPeriodTo(random(10, 300));
 	StepCounter = 0;
-	StepTarget = random(200, 300);
+	StepTarget = random(75, 150);
 	Stage = 10; // too high -> kicks in starting a new one
 }
 

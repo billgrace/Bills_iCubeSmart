@@ -61,6 +61,7 @@ This class has two main purposes:
 #include "LEDCombo8.h"
 #include "LEDCombo9.h"
 #include "LEDColumns.h"
+#include "LEDWorms.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -114,6 +115,7 @@ extern LEDRainbow Rainbow;
 extern LEDCombo8 Combo8;
 extern LEDCombo9 Combo9;
 extern LEDColumns Columns;
+extern LEDWorms Worms;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -381,6 +383,9 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 49:
         Columns.StepColumns();
+        break;
+      case 50:
+        Worms.StepWorms();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -684,6 +689,11 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Columns.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Columns.StartColumns();
+    break;
+  case 50:
+    SuggestedAnimationDuration = Worms.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Worms.StartWorms();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

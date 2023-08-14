@@ -162,6 +162,10 @@
 // Send randomly colored, located & oriented 2x2x8 columns growing throught the cube
 #include "LEDColumns.h"         // Animation 49
 
+// 1x1 cross-section worms of varying length crawl around the cube
+#include "LEDWorms.h"            // Animation 50
+
+
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
 #define OnboardLEDGreen   PB9
@@ -246,6 +250,7 @@ LEDRainbow Rainbow;
 LEDCombo8 Combo8;
 LEDCombo9 Combo9;
 LEDColumns Columns;
+LEDWorms Worms;
 
 
 // Serial link to the Arduino IDE
