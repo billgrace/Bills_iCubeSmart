@@ -177,6 +177,9 @@
 // Slide horizontal sheets in and out
 #include "LEDSheets.h"          // Animation 54
 
+// Rotate a solid color around an axis to fill the cube
+#include "LEDCylinder.h"        // Animation 55
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -267,6 +270,7 @@ LEDSprinkler Sprinkler;
 LEDCombo10 Combo10;
 LEDCombo11 Combo11;
 LEDSheets Sheets;
+LEDCylinder Cylinder;
 
 
 // Serial link to the Arduino IDE

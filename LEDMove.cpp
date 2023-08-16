@@ -1324,3 +1324,11 @@ int LEDMove::GetSprinklerArcPosition1(int DropNumber) {
 	return SprinklerArcPosition[DropNumber][1];
 }
 
+int LEDMove::GetCylinderMovePosition0(int Angle, int Radius) {
+	return CylinderMovePosition[Angle][Radius][0];
+}
+
+int LEDMove::GetCylinderMovePosition1(int Angle, int Radius) {
+	return CylinderMovePosition[Angle][Radius][1];
+}
+

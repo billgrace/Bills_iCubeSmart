@@ -170,7 +170,7 @@ class LEDCube {
     int TestAlternateIndex = 0;
     int CurrentAnimationIndex = 0;
     int LastAnimationIndex = 0;
-    int NumberOfAnimationsImplemented = 55;
+    int NumberOfAnimationsImplemented = 56;
     int RecentAnimationIndexes[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     byte LEDIsOn[8][8][8];
     byte ColorIntensityIndexSelector[ColorIntensityPassCount] = {0, 2, 1, 2, 1, 2, 2};

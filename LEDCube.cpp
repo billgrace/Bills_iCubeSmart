@@ -66,6 +66,7 @@ This class has two main purposes:
 #include "LEDCombo10.h"
 #include "LEDCombo11.h"
 #include "LEDSheets.h"
+#include "LEDCylinder.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -124,6 +125,7 @@ extern LEDSprinkler Sprinkler;
 extern LEDCombo10 Combo10;
 extern LEDCombo11 Combo11;
 extern LEDSheets Sheets;
+extern LEDCylinder Cylinder;
 
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
@@ -407,6 +409,9 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 54:
         Sheets.StepSheets();
+        break;
+      case 55:
+        Cylinder.StepCylinder();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -735,6 +740,11 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Sheets.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Sheets.StartSheets();
+    break;
+  case 55:
+    SuggestedAnimationDuration = Cylinder.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Cylinder.StartCylinder();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

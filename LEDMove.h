@@ -271,6 +271,16 @@ Arc from top corner to bottom with 9 positions.
 Define each position as {X, Z} with X = 0..5 & Z = 7..0.
 Caller translates these as needed.
 
+
+#####################################################
+#####################################################
+##############   CYLINDER MOVE   ####################
+#####################################################
+#####################################################
+Sweep a line from the 4 points at the center of a cube face to the
+edge of that face and include EVERY point as the line makes a
+complete ciruit. It takes 28 steps to include every point.
+
 */
 #define NumberOfSpiralPatterns 4
 class LEDMove {
@@ -417,6 +427,36 @@ private:
 	int CircleMovePositions[12][2] = {
 		{4, 0}, {6, 1}, {7, 3}, {7, 4}, {6, 6}, {4, 7}, {3, 7}, {1, 6}, {0, 4}, {0, 3}, {1, 1}, {3, 0}
 	};
+	int CylinderMovePosition[28][4][2] = {
+		{ {4, 4}, {5, 4}, {6, 4}, {7, 4} },
+			{ {4, 4}, {5, 5}, {6, 5}, {7, 5} },
+				{ {4, 4}, {5, 5}, {6, 6}, {7, 6} },
+					{ {4, 4}, {5, 5}, {6, 6}, {7, 7} },
+						{ {4, 4}, {4, 5}, {5, 6}, {6, 7} },
+							{ {4, 4}, {4, 5}, {4, 6}, {5, 7} },
+								{ {4, 4}, {4, 5}, {4, 6}, {4, 7} },
+		{ {3, 4}, {3, 5}, {3, 6}, {3, 7} },
+			{ {3, 4}, {3, 5}, {3, 6}, {2, 7} },
+				{ {3, 4}, {3, 5}, {2, 6}, {1, 7} },
+					{ {3, 4}, {2, 5}, {1, 6}, {0, 7} },
+						{ {3, 4}, {2, 4}, {1, 5}, {0, 6} },
+							{ {3, 4}, {2, 4}, {1, 4}, {0, 5} },
+								{ {3, 4}, {2, 4}, {1, 4}, {0, 4} },
+		{ {3, 3}, {2, 3}, {1, 3}, {0, 3} },
+			{ {3, 3}, {2, 3}, {1, 3}, {0, 2} },
+				{ {3, 3}, {2, 3}, {1, 2}, {0, 1} },
+					{ {3, 3}, {2, 2}, {1, 1}, {0, 0} },
+						{ {3, 3}, {3, 2}, {2, 1}, {1, 0} },
+							{ {3, 3}, {3, 2}, {3, 1}, {2, 0} },
+								{ {3, 3}, {3, 2}, {3, 1}, {3, 0} },
+		{ {4, 3}, {4, 2}, {4, 1}, {4, 0} },
+			{ {4, 3}, {4, 2}, {4, 1}, {5, 0} },
+				{ {4, 3}, {4, 2}, {5, 1}, {6, 0} },
+					{ {4, 3}, {5, 2}, {6, 1}, {7, 0} },
+						{ {4, 3}, {5, 3}, {6, 2}, {7, 1} },
+							{ {4, 3}, {5, 3}, {6, 3}, {7, 2} },
+								{ {4, 3}, {5, 3}, {6, 3}, {7, 3} }
+	};
 	int MerryGoRoundMoveEdgeSize;
 	int MerryGoRoundMaxCoordinate;
 	int MerryGoRoundCurrentDirection;
@@ -479,5 +519,7 @@ public:
 	int GetMarathonMoveZ();
 	int GetSprinklerArcPosition0(int DropNumber);
 	int GetSprinklerArcPosition1(int DropNumber);
+	int GetCylinderMovePosition0(int Angle, int Radius);
+	int GetCylinderMovePosition1(int Angle, int Radius);
 };
 #endif
