@@ -62,6 +62,10 @@ This class has two main purposes:
 #include "LEDCombo9.h"
 #include "LEDColumns.h"
 #include "LEDWorms.h"
+#include "LEDSprinkler.h"
+#include "LEDCombo10.h"
+#include "LEDCombo11.h"
+#include "LEDSheets.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -116,6 +120,11 @@ extern LEDCombo8 Combo8;
 extern LEDCombo9 Combo9;
 extern LEDColumns Columns;
 extern LEDWorms Worms;
+extern LEDSprinkler Sprinkler;
+extern LEDCombo10 Combo10;
+extern LEDCombo11 Combo11;
+extern LEDSheets Sheets;
+
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -386,6 +395,18 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 50:
         Worms.StepWorms();
+        break;
+      case 51:
+        Sprinkler.StepSprinkler();
+        break;
+      case 52:
+        Combo10.StepCombo10();
+        break;
+      case 53:
+        Combo11.StepCombo11();
+        break;
+      case 54:
+        Sheets.StepSheets();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -694,6 +715,26 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Worms.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Worms.StartWorms();
+    break;
+  case 51:
+    SuggestedAnimationDuration = Sprinkler.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Sprinkler.StartSprinkler();
+    break;
+  case 52:
+    SuggestedAnimationDuration = Combo10.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo10.StartCombo10();
+    break;
+  case 53:
+    SuggestedAnimationDuration = Combo11.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Combo11.StartCombo11();
+    break;
+  case 54:
+    SuggestedAnimationDuration = Sheets.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Sheets.StartSheets();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

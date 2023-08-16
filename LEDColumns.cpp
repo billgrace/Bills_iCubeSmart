@@ -20,6 +20,7 @@ int LEDColumns::SuggestedNumberOfAnimationCycles() {
 void LEDColumns::StartColumns() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
+	Cube.SetAnimationStepSpeedPeriodTo(random(60, 100));
 	ColumnCounter = 0;
 	ColumnTarget = random(70, 115);
 	Mode = random(0, 3);

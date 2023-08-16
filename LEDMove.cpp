@@ -1315,3 +1315,12 @@ int LEDMove::GetMarathonMoveY() {
 int LEDMove::GetMarathonMoveZ() {
 	return MarathonMoveZ;
 }
+
+int LEDMove::GetSprinklerArcPosition0(int DropNumber) {
+	return SprinklerArcPosition[DropNumber][0];
+}
+
+int LEDMove::GetSprinklerArcPosition1(int DropNumber) {
+	return SprinklerArcPosition[DropNumber][1];
+}
+

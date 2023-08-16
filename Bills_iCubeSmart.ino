@@ -165,6 +165,18 @@
 // 1x1 cross-section worms of varying length crawl around the cube
 #include "LEDWorms.h"            // Animation 50
 
+// Sprinkler: drops from top corners arcing toward bottom
+#include "LEDSprinkler.h"       // Animation 51
+
+// Combo10: JumpRope(41) & Worm(50)
+#include "LEDCombo10.h"         // Animation 52
+
+// Run FlopWall (#15) and JumpRope (#41) at the same time
+#include "LEDCombo11.h"         // Animation 53
+
+// Slide horizontal sheets in and out
+#include "LEDSheets.h"          // Animation 54
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -251,6 +263,10 @@ LEDCombo8 Combo8;
 LEDCombo9 Combo9;
 LEDColumns Columns;
 LEDWorms Worms;
+LEDSprinkler Sprinkler;
+LEDCombo10 Combo10;
+LEDCombo11 Combo11;
+LEDSheets Sheets;
 
 
 // Serial link to the Arduino IDE

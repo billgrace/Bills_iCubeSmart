@@ -19,6 +19,7 @@ int LEDColorRegion::SuggestedNumberOfAnimationCycles() {
 void LEDColorRegion::StartColorRegion() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
+	Cube.SetAnimationStepSpeedPeriodTo(random(60, 100));
 	CurrentX = Cube.RandomColor();
 	CurrentY = Cube.RandomColor();
 	CurrentZ = Cube.RandomColor();

@@ -261,6 +261,16 @@ MarathonMoveSegment:
 2: X moves from 7 to 0 with Y at 7
 3: Y moves from 7 to 0 with X at 0
 
+
+#####################################################
+#####################################################
+##############   SPRINKLER ARC   ####################
+#####################################################
+#####################################################
+Arc from top corner to bottom with 9 positions.
+Define each position as {X, Z} with X = 0..5 & Z = 7..0.
+Caller translates these as needed.
+
 */
 #define NumberOfSpiralPatterns 4
 class LEDMove {
@@ -417,6 +427,10 @@ private:
 	int MarathonMoveZ;
 	int MarathonMoveSegment;
 	int MarathonMoveVerticalDirection;
+	int SprinklerArcPosition[9][2] = {
+		{0, 7}, {1, 7}, {3, 6}, {4, 5}, {5, 4},
+		{5, 3}, {5, 2}, {5, 1}, {5, 0}
+	};
 public:
 	LEDMove();
 	void InitializeCubeMove(int Radius, int Mode, int SegmentCountTarget);
@@ -463,5 +477,7 @@ public:
 	int GetMarathonMoveX();
 	int GetMarathonMoveY();
 	int GetMarathonMoveZ();
+	int GetSprinklerArcPosition0(int DropNumber);
+	int GetSprinklerArcPosition1(int DropNumber);
 };
 #endif
