@@ -26,7 +26,7 @@ void LEDSonar::StartSonar() {
 	StartCounter = 0;
 	StartTarget = random(2, 5);
 	for (int Index = 0; Index < MaxNumberOfSonarBlips; Index++) {
-		SonarBlip[Index][7] = 7;
+		SonarBlip[Index][6] = 7;
 	}
 }
 
@@ -51,12 +51,12 @@ void LEDSonar::StartNewBlip() {
 	int NewCompositeColor = 0;
 	while ((BlipIndex < MaxNumberOfSonarBlips) && (false == FoundABlip)) {
 		// Is this blip available?
-		if (SonarBlip[BlipIndex][7] == 7) {
+		if (SonarBlip[BlipIndex][6] == 7) {
 			// then set it to "starting"
-			SonarBlip[BlipIndex][7] = 0;
-			SonarBlip[BlipIndex][0] = random(2, 6);
-			SonarBlip[BlipIndex][1] = random(2, 6);
-			SonarBlip[BlipIndex][2] = random(2, 6);
+			SonarBlip[BlipIndex][6] = 0;
+			SonarBlip[BlipIndex][0] = random(1, 7);
+			SonarBlip[BlipIndex][1] = random(1, 7);
+			SonarBlip[BlipIndex][2] = random(1, 7);
 			NewCompositeColor = Cube.RandomSolidColor();
 			SonarBlip[BlipIndex][3] = Cube.RedPartOf(NewCompositeColor);
 			SonarBlip[BlipIndex][4] = Cube.GreenPartOf(NewCompositeColor);
@@ -81,7 +81,7 @@ void LEDSonar::StepAllActiveBlips() {
 		Red = SonarBlip[Index][3];
 		Green = SonarBlip[Index][4];
 		Blue = SonarBlip[Index][5];
-		switch (SonarBlip[Index][7]) {
+		switch (SonarBlip[Index][6]) {
 		case 0:
 			// Center only, attenuation 0
 			DrawCenter(X, Y, Z, Red, Green, Blue, 0);
@@ -121,8 +121,8 @@ void LEDSonar::StepAllActiveBlips() {
 			break;
 		}
 		// If this blip is active, move it to the next state
-		if (SonarBlip[Index][7] < 7) {
-			SonarBlip[Index][7]++;
+		if (SonarBlip[Index][6] < 7) {
+			SonarBlip[Index][6]++;
 		}
 	}
 }

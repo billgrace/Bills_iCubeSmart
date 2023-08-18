@@ -1332,3 +1332,11 @@ int LEDMove::GetCylinderMovePosition1(int Angle, int Radius) {
 	return CylinderMovePosition[Angle][Radius][1];
 }
 
+int LEDMove::GetPinWheelMovePosition0(int Angle, int Radius) {
+	return PinWheelMovePosition[Angle][Radius][0];
+}
+
+int LEDMove::GetPinWheelMovePosition1(int Angle, int Radius) {
+	return PinWheelMovePosition[Angle][Radius][1];
+}
+

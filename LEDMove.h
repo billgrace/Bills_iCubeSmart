@@ -281,6 +281,16 @@ Sweep a line from the 4 points at the center of a cube face to the
 edge of that face and include EVERY point as the line makes a
 complete ciruit. It takes 28 steps to include every point.
 
+
+#####################################################
+#####################################################
+##############   PINWHEEL MOVE   ####################
+#####################################################
+#####################################################
+Sweep a line from the 4 points at the center of a cube face to the
+edge of that face with a "swept back" profile.
+It takes 8 steps to make a full circle.
+
 */
 #define NumberOfSpiralPatterns 4
 class LEDMove {
@@ -457,6 +467,16 @@ private:
 							{ {4, 3}, {5, 3}, {6, 3}, {7, 2} },
 								{ {4, 3}, {5, 3}, {6, 3}, {7, 3} }
 	};
+	int PinWheelMovePosition[8][5][2] = {
+		{ {4, 4}, {5, 5}, {6, 5}, {7, 5}, {7, 4} },
+		{ {4, 4}, {4, 5}, {4, 6}, {5, 7}, {6, 7} },
+		{ {3, 4}, {2, 5}, {2, 6}, {2, 7}, {3, 7} },
+		{ {3, 4}, {2, 4}, {1, 4}, {0, 5}, {0, 6} },
+		{ {3, 3}, {2, 2}, {1, 2}, {0, 2}, {0, 3} },
+		{ {3, 3}, {3, 2}, {3, 1}, {2, 0}, {1, 0} },
+		{ {4, 3}, {5, 2}, {5, 1}, {5, 0}, {4, 0} },
+		{ {4, 3}, {5, 3}, {6, 3}, {7, 2}, {7, 1} }
+	};
 	int MerryGoRoundMoveEdgeSize;
 	int MerryGoRoundMaxCoordinate;
 	int MerryGoRoundCurrentDirection;
@@ -521,5 +541,7 @@ public:
 	int GetSprinklerArcPosition1(int DropNumber);
 	int GetCylinderMovePosition0(int Angle, int Radius);
 	int GetCylinderMovePosition1(int Angle, int Radius);
+	int GetPinWheelMovePosition0(int Angle, int Radius);
+	int GetPinWheelMovePosition1(int Angle, int Radius);
 };
 #endif

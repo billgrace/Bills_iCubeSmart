@@ -67,6 +67,10 @@ This class has two main purposes:
 #include "LEDCombo11.h"
 #include "LEDSheets.h"
 #include "LEDCylinder.h"
+#include "LEDPinWheel.h"
+#include "LEDCloud.h"
+#include "LEDWireCube.h"
+#include "LEDFace.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -126,7 +130,10 @@ extern LEDCombo10 Combo10;
 extern LEDCombo11 Combo11;
 extern LEDSheets Sheets;
 extern LEDCylinder Cylinder;
-
+extern LEDPinWheel PinWheel;
+extern LEDCloud Cloud;
+extern LEDWireCube WireCube;
+extern LEDFace Face;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -412,6 +419,18 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 55:
         Cylinder.StepCylinder();
+        break;
+      case 56:
+        PinWheel.StepPinWheel();
+        break;
+      case 57:
+        Cloud.StepCloud();
+        break;
+      case 58:
+        WireCube.StartWireCube();
+        break;
+      case 59:
+        Face.StartFace();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -745,6 +764,26 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Cylinder.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Cylinder.StartCylinder();
+    break;
+  case 56:
+    SuggestedAnimationDuration = PinWheel.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    PinWheel.StartPinWheel();
+    break;
+  case 57:
+    SuggestedAnimationDuration = Cloud.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Cloud.StartCloud();
+    break;
+  case 58:
+    SuggestedAnimationDuration = WireCube.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    WireCube.StartWireCube();
+    break;
+  case 59:
+    SuggestedAnimationDuration = Face.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    Face.StartFace();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

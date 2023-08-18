@@ -11,8 +11,7 @@
 3: Red
 4: Green
 5: Blue
-6: Size
-7: State
+6: State
 
 where State is:
 0: Center only, attenuation 0

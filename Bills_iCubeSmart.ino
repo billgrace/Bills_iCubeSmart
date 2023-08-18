@@ -180,6 +180,18 @@
 // Rotate a solid color around an axis to fill the cube
 #include "LEDCylinder.h"        // Animation 55
 
+// Rotate a streamlined spinner around a centra axis
+#include "LEDPinWheel.h"        // Animation 56
+
+// Fade in and out random cubes
+#include "LEDCloud.h"           // Animation 57
+
+// Wireframe cube "breathing" between 2x2 and 8x8 with varying colors
+#include "LEDWireCube.h"        // Animation 58
+
+// Cube faces appearing & disappearing
+#include "LEDFace.h"            // Animation 59
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -271,6 +283,10 @@ LEDCombo10 Combo10;
 LEDCombo11 Combo11;
 LEDSheets Sheets;
 LEDCylinder Cylinder;
+LEDPinWheel PinWheel;
+LEDCloud Cloud;
+LEDWireCube WireCube;
+LEDFace Face;
 
 
 // Serial link to the Arduino IDE
