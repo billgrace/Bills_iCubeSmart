@@ -427,10 +427,10 @@ void LEDCube::AnimationStepThrottle() {
         Cloud.StepCloud();
         break;
       case 58:
-        WireCube.StartWireCube();
+        WireCube.StepWireCube();
         break;
       case 59:
-        Face.StartFace();
+        Face.StepFace();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
