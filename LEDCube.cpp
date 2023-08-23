@@ -71,6 +71,7 @@ This class has two main purposes:
 #include "LEDCloud.h"
 #include "LEDWireCube.h"
 #include "LEDFace.h"
+#include "LEDBigSlosh.h"
 
 extern LEDCube Cube;
 extern LEDMove Move;
@@ -134,6 +135,7 @@ extern LEDPinWheel PinWheel;
 extern LEDCloud Cloud;
 extern LEDWireCube WireCube;
 extern LEDFace Face;
+extern LEDBigSlosh BigSlosh;
 
 // The class constructor here sets up the processor pins controlling the cube's LEDs
 LEDCube::LEDCube() {
@@ -431,6 +433,9 @@ void LEDCube::AnimationStepThrottle() {
         break;
       case 59:
         Face.StepFace();
+        break;
+      case 60:
+        BigSlosh.StepBigSlosh();
         break;
       default:
         Serial1.print("Default case in AnimationStepThrottle(): ");
@@ -784,6 +789,11 @@ int CandidateAnimationIndex;
     SuggestedAnimationDuration = Face.SuggestedNumberOfAnimationCycles();
     SetAnimationDurationInCycles(SuggestedAnimationDuration);
     Face.StartFace();
+    break;
+  case 60:
+    SuggestedAnimationDuration = BigSlosh.SuggestedNumberOfAnimationCycles();
+    SetAnimationDurationInCycles(SuggestedAnimationDuration);
+    BigSlosh.StartBigSlosh();
     break;
   default:
     Serial1.println("Default case in MoveOnToNextAnimation()");

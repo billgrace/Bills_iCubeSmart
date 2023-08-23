@@ -192,6 +192,9 @@
 // Cube faces appearing & disappearing
 #include "LEDFace.h"            // Animation 59
 
+// Thicker version of Slosh
+#include "LEDBigSlosh.h"        // Animation 60
+
 
 // Pin definitions for LEDs on the iSmart cube's microprocessor PCB:
 #define OnboardLEDRed     PB8
@@ -287,6 +290,7 @@ LEDPinWheel PinWheel;
 LEDCloud Cloud;
 LEDWireCube WireCube;
 LEDFace Face;
+LEDBigSlosh BigSlosh;
 
 
 // Serial link to the Arduino IDE

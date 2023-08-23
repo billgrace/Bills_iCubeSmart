@@ -1,9 +1,10 @@
-// LEDFLopWall.h
-#ifndef LEDFLopWall_h
+// LEDFlopWall.h
+#ifndef LEDFlopWall_h
 #define LEDFlopWall_h
 #include <Arduino.h>
 
 #define NumberOfFlopWallPatterns 7
+
 
 class LEDFlopWall {
 private:

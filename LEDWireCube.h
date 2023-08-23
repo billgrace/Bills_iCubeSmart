@@ -3,8 +3,15 @@
 #define LEDWireCube_h
 #include <Arduino.h>
 
+/*
+Mode:
+0: Wire frame
+1: Solid cube
+*/
+
 class LEDWireCube {
 private:
+	int Mode;
 	int StepCounter;
 	int StepTarget;
 	int ColorChangeCounter;

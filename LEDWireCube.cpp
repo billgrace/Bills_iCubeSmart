@@ -21,6 +21,7 @@ void LEDWireCube::StartWireCube() {
 	Cube.ClearImage();
 	Cube.IncrementAnimationDurationCycleCount();
 	Cube.SetAnimationStepSpeedPeriodTo(random(250, 350));
+	Mode = random(0, 2);
 	StepCounter = 0;
 	StepTarget = random(30, 100);
 	ColorChangeCounter = 0;
@@ -44,8 +45,10 @@ void LEDWireCube::StepWireCube() {
 		Green = Cube.RandomColor();
 		Blue = Cube.RandomColor();
 	}
+
 	// Erase previous
 	DrawCube(true);
+
 	// Adjust size
 	if (EdgeLengthDelta > 0) {
 		// Size is growing
@@ -81,6 +84,7 @@ void LEDWireCube::DrawCube(bool Erase) {
 	int R;
 	int G;
 	int B;
+	// Figure color
 	if (Erase) {
 		R = 0;
 		G = 0;
@@ -90,6 +94,7 @@ void LEDWireCube::DrawCube(bool Erase) {
 		G = Green;
 		B = Blue;
 	}
+	// Figure size
 	switch (EdgeLength) {
 	case 2:
 		C1 = 3;
@@ -108,22 +113,38 @@ void LEDWireCube::DrawCube(bool Erase) {
 		C2 = 7;
 		break;
 	}
-	for (X = C1; X <= C2; X++) {
-		Cube.SetLEDColor(X, C1, C1, R, G, B);
-		Cube.SetLEDColor(X, C1, C2, R, G, B);
-		Cube.SetLEDColor(X, C2, C1, R, G, B);
-		Cube.SetLEDColor(X, C2, C2, R, G, B);
-	}
-	for (Y = C1; Y <= C2; Y++) {
-		Cube.SetLEDColor(C1, Y, C1, R, G, B);
-		Cube.SetLEDColor(C1, Y, C2, R, G, B);
-		Cube.SetLEDColor(C2, Y, C1, R, G, B);
-		Cube.SetLEDColor(C2, Y, C2, R, G, B);
-	}
-	for (Z = C1; Z <= C2; Z++) {
-		Cube.SetLEDColor(C1, C1, Z, R, G, B);
-		Cube.SetLEDColor(C1, C2, Z, R, G, B);
-		Cube.SetLEDColor(C2, C1, Z, R, G, B);
-		Cube.SetLEDColor(C2, C2, Z, R, G, B);
+	// Draw it
+	switch (Mode) {
+	case 0:
+		// Wire frame
+		for (X = C1; X <= C2; X++) {
+			Cube.SetLEDColor(X, C1, C1, R, G, B);
+			Cube.SetLEDColor(X, C1, C2, R, G, B);
+			Cube.SetLEDColor(X, C2, C1, R, G, B);
+			Cube.SetLEDColor(X, C2, C2, R, G, B);
+		}
+		for (Y = C1; Y <= C2; Y++) {
+			Cube.SetLEDColor(C1, Y, C1, R, G, B);
+			Cube.SetLEDColor(C1, Y, C2, R, G, B);
+			Cube.SetLEDColor(C2, Y, C1, R, G, B);
+			Cube.SetLEDColor(C2, Y, C2, R, G, B);
+		}
+		for (Z = C1; Z <= C2; Z++) {
+			Cube.SetLEDColor(C1, C1, Z, R, G, B);
+			Cube.SetLEDColor(C1, C2, Z, R, G, B);
+			Cube.SetLEDColor(C2, C1, Z, R, G, B);
+			Cube.SetLEDColor(C2, C2, Z, R, G, B);
+		}
+		break;
+	case 1:
+		// Solid cube
+		for (X = C1; X <= C2; X++) {
+			for (Y = C1; Y <= C2; Y++) {
+				for (Z = C1; Z <= C2; Z++) {
+					Cube.SetLEDColor(X, Y, Z, R, G, B);
+				}
+			}
+		}
+		break;
 	}
 }
