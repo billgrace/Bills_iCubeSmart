@@ -32,6 +32,7 @@ void LEDSheets::StartSheets() {
 		Level[i][4] = random(0, 4);
 	}
 	CurrentLevel = random(0, 8);
+	Mode = random(0, 3);
 }
 
 void LEDSheets::StepSheets() {
@@ -75,75 +76,220 @@ void LEDSheets::StepSheets() {
 		}
 	}
 	// OK, we've established the level, direction and length so add or erase one row
-	Z = CurrentLevel;
 	Red = Level[CurrentLevel][0];
 	Green = Level[CurrentLevel][1];
 	Blue = Level[CurrentLevel][2];
 	OldLength = Level[CurrentLevel][3];
-	switch (Level[CurrentLevel][4]) {
+	switch (Mode) {
 	case 0:
-		// Filling left to right
-		X = OldLength;
-		for (Y = 0; Y < 8; Y++) {
-			Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+		// sheet normal = Z
+		Z = CurrentLevel;
+		switch (Level[CurrentLevel][4]) {
+		case 0:
+			// Filling left to right
+			X = OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 1:
+			// Filling right to left
+			X = 7 - OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 2:
+			// Filling front to back
+			Y = OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 3:
+			// Filling back to front
+			Y = 7 - OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 4:
+			// Emptying right to left
+			X = OldLength - 1;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 5:
+			// Emptying left to right
+			X = 8 - OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 6:
+			// Emptying back to front
+			Y = OldLength - 1;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 7:
+			// Emptying front to back
+			Y = 8 - OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
 		}
-		NewLength = OldLength + 1;
 		break;
 	case 1:
-		// Filling right to left
-		X = 7 - OldLength;
-		for (Y = 0; Y < 8; Y++) {
-			Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+		// sheet normal = X
+		X = CurrentLevel;
+		switch (Level[CurrentLevel][4]) {
+		case 0:
+			// Filling bottom to top
+			Z = OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 1:
+			// Filling top to bottom
+			Z = 7 - OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 2:
+			// Filling front to back
+			Y = OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 3:
+			// Filling back to front
+			Y = 7 - OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 4:
+			// Emptying top to bottom
+			Z = OldLength - 1;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 5:
+			// Emptying bottom to top
+			Z = 8 - OldLength;
+			for (Y = 0; Y < 8; Y++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 6:
+			// Emptying back to front
+			Y = OldLength - 1;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 7:
+			// Emptying front to back
+			Y = 8 - OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
 		}
-		NewLength = OldLength + 1;
 		break;
 	case 2:
-		// Filling front to back
-		Y = OldLength;
-		for (X = 0; X < 8; X++) {
-			Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+		// sheet normal = Y
+		Y = CurrentLevel;
+		switch (Level[CurrentLevel][4]) {
+		case 0:
+			// Filling left to right
+			X = OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 1:
+			// Filling right to left
+			X = 7 - OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 2:
+			// Filling front to back
+			Z = OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 3:
+			// Filling back to front
+			Z = 7 - OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
+			}
+			NewLength = OldLength + 1;
+			break;
+		case 4:
+			// Emptying right to left
+			X = OldLength - 1;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 5:
+			// Emptying left to right
+			X = 8 - OldLength;
+			for (Z = 0; Z < 8; Z++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 6:
+			// Emptying back to front
+			Z = OldLength - 1;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
+		case 7:
+			// Emptying front to back
+			Z = 8 - OldLength;
+			for (X = 0; X < 8; X++) {
+				Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
+			}
+			NewLength = OldLength - 1;
+			break;
 		}
-		NewLength = OldLength + 1;
-		break;
-	case 3:
-		// Filling back to front
-		Y = 7 - OldLength;
-		for (X = 0; X < 8; X++) {
-			Cube.SetLEDColor(X, Y, Z, Red, Green, Blue);
-		}
-		NewLength = OldLength + 1;
-		break;
-	case 4:
-		// Emptying right to left
-		X = OldLength - 1;
-		for (Y = 0; Y < 8; Y++) {
-			Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
-		}
-		NewLength = OldLength - 1;
-		break;
-	case 5:
-		// Emptying left to right
-		X = 8 - OldLength;
-		for (Y = 0; Y < 8; Y++) {
-			Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
-		}
-		NewLength = OldLength - 1;
-		break;
-	case 6:
-		// Emptying back to front
-		Y = OldLength - 1;
-		for (X = 0; X < 8; X++) {
-			Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
-		}
-		NewLength = OldLength - 1;
-		break;
-	case 7:
-		// Emptying front to back
-		Y = 8 - OldLength;
-		for (X = 0; X < 8; X++) {
-			Cube.SetLEDColor(X, Y, Z, 0, 0, 0);
-		}
-		NewLength = OldLength - 1;
 		break;
 	}
 	Level[CurrentLevel][3] = NewLength;

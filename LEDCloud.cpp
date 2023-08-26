@@ -56,7 +56,6 @@ void LEDCloud::StartANewCloud() {
 	for (int i = 0; i < LEDCloudMaxNumberOfClouds; i++) {
 		if (Cloud[i][8] == 0) {
 			// This cloud is available
-			i = i;
 			// Mark it as "getting brighter from dimmest possible"
 			Cloud[i][8] = 1;
 			Cloud[i][7] = 1;
